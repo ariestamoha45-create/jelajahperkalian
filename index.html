@@ -1570,6 +1570,22 @@
             }
         }
 
+        function friendlyLoginError(error, role) {
+            const message = String(error?.message || '');
+            const normalized = message.toLowerCase();
+            if (normalized.includes('invalid login credentials')) {
+                return role === 'student'
+                    ? 'Belum bisa masuk. Periksa kembali kode sekolah 4 angka, username, dan kata sandi siswa. Pastikan akun dibuat oleh guru untuk Jelajah Perkalian. Jika masih gagal, minta guru memeriksa data akunmu.'
+                    : 'Belum bisa masuk. Periksa kembali kode sekolah 4 angka, username, dan kata sandi guru. Pastikan menggunakan akun Jelajah Perkalian. Jika masih gagal, minta pengelola sekolah memeriksa data akun.';
+            }
+            if (/failed to fetch|network|load failed|timed? ?out/i.test(message)) {
+                return 'Aplikasi belum dapat terhubung ke server. Periksa koneksi internet, lalu coba masuk kembali.';
+            }
+            return message || (role === 'student'
+                ? 'Login siswa belum berhasil. Periksa kembali data akunmu atau minta bantuan guru.'
+                : 'Login guru belum berhasil. Periksa kembali data akun atau minta bantuan pengelola sekolah.');
+        }
+
         async function loginAsStudent() {
             const schoolCode = document.getElementById('input-login-student-school-code').value;
             const username = document.getElementById('input-login-student-username').value.trim().toLowerCase();
@@ -1580,7 +1596,7 @@
                 errorEl.classList.add('hidden');
             } catch (error) {
                 console.error('Login siswa gagal:', error);
-                errorEl.textContent = error.message || 'Username atau kata sandi siswa salah.';
+                errorEl.textContent = friendlyLoginError(error, 'student');
                 errorEl.classList.remove('hidden');
             }
         }
@@ -1595,7 +1611,7 @@
                 errorEl.classList.add('hidden');
             } catch (error) {
                 console.error('Login guru gagal:', error);
-                errorEl.textContent = error.message || 'Username atau kata sandi guru salah.';
+                errorEl.textContent = friendlyLoginError(error, 'teacher');
                 errorEl.classList.remove('hidden');
             }
         }
