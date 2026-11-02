@@ -2453,7 +2453,7 @@
                 closeModal('modal-teacher-pin');
                 document.getElementById('pin-error-msg').classList.add('hidden');
             } catch (error) {
-                document.getElementById('pin-error-msg').textContent = error.message || 'Username atau kata sandi salah.';
+                document.getElementById('pin-error-msg').textContent = friendlyLoginError(error, 'teacher');
                 document.getElementById('pin-error-msg').classList.remove('hidden');
             }
         }
@@ -2953,7 +2953,7 @@
                 document.getElementById('student-login-error').classList.add('hidden');
             } catch (error) {
                 const errorEl = document.getElementById('student-login-error');
-                errorEl.textContent = error.message || 'Username atau kata sandi salah.';
+                errorEl.textContent = friendlyLoginError(error, 'student');
                 errorEl.classList.remove('hidden');
             }
         }
