@@ -450,7 +450,7 @@
 
                 <div class="text-center space-y-2">
                     <h3 id="game-setup-title" class="font-display text-2xl font-bold text-white">Pilih Tabel Perkalian Latihan</h3>
-                    <p class="text-sm text-gray-400">Pilih tabel perkalian yang ingin kamu gunakan dalam game ini.</p>
+                    <p class="text-sm text-gray-400">Pilih tabel perkalian yang ingin kamu gunakan. Setiap ronde latihan maksimal 20 soal.</p>
                 </div>
 
                 <!-- Checkbox Multi-selection -->
@@ -468,8 +468,9 @@
             <!-- GAME 1: KUIS KLASIK KILAT CARD -->
             <!-- GAME 1: PILIHAN GANDA CARD -->
             <div id="practice-quiz-card" class="hidden bg-space-card border border-space-border rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 text-center max-w-2xl mx-auto">
-                <div class="flex justify-between items-center text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
+                <div class="flex flex-wrap justify-between items-center gap-2 text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
                     <span class="text-cyan-400 font-bold"><i class="fa-solid fa-list-check mr-1"></i> Pilihan Ganda</span>
+                    <span id="practice-question-counter" class="text-cyan-300">Soal 0 / 20</span>
                     <span id="practice-score-counter" class="text-emerald-400"><i class="fa-solid fa-star mr-1"></i> Benar: 0</span>
                 </div>
 
@@ -484,6 +485,7 @@
                 <div id="practice-feedback" class="h-8 flex items-center justify-center text-sm font-bold opacity-0 transition-opacity duration-300">
                     <!-- Feedback JS -->
                 </div>
+                <div id="practice-help-panel" class="hidden text-left bg-cyan-500/10 border border-cyan-400/20 rounded-2xl p-4 space-y-3"></div>
 
                 <!-- Answer Choices (4 options) -->
                 <div class="grid grid-cols-2 gap-4" id="practice-answers-grid">
@@ -500,9 +502,10 @@
 
             <!-- GAME 2: KARTU PASANGAN CARD -->
             <div id="practice-memory-card" class="hidden bg-space-card border border-space-border rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 text-center max-w-3xl mx-auto">
-                <div class="flex justify-between items-center text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
+                <div class="flex flex-wrap justify-between items-center gap-2 text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
                     <span class="text-purple-400 font-bold"><i class="fa-solid fa-clone mr-1"></i> Kartu Pasangan</span>
                     <span id="memory-matched-counter" class="text-emerald-400"><i class="fa-solid fa-check-double mr-1"></i> Pasangan: 0 / 6</span>
+                    <span id="memory-question-counter" class="text-cyan-300">Soal 0 / 20</span>
                 </div>
 
                 <p class="text-xs text-gray-400">Buka kartu dan temukan pasangan antara soal perkalian dengan jawabannya!</p>
@@ -511,6 +514,7 @@
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 md:gap-4 max-w-xl mx-auto" id="memory-cards-grid">
                     <!-- Cards Render JS -->
                 </div>
+                <div id="memory-help-panel" class="hidden text-left bg-cyan-500/10 border border-cyan-400/20 rounded-2xl p-4 space-y-3"></div>
 
                 <div class="pt-4 border-t border-space-border flex justify-between items-center">
                     <button onclick="backToPracticeSubmenu()" class="text-xs text-gray-400 hover:text-rose-400 transition">
@@ -524,8 +528,9 @@
 
             <!-- GAME 3: BENAR ATAU SALAH CARD -->
             <div id="practice-truefalse-card" class="hidden bg-space-card border border-space-border rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 text-center max-w-2xl mx-auto">
-                <div class="flex justify-between items-center text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
+                <div class="flex flex-wrap justify-between items-center gap-2 text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
                     <span class="text-amber-400 font-bold"><i class="fa-solid fa-scale-balanced mr-1"></i> Benar atau Salah</span>
+                    <span id="tf-question-counter" class="text-cyan-300">Soal 0 / 20</span>
                     <span id="tf-score-counter" class="text-emerald-400"><i class="fa-solid fa-star mr-1"></i> Skor: 0</span>
                 </div>
 
@@ -540,6 +545,7 @@
                 <div id="tf-feedback" class="h-8 flex items-center justify-center text-sm font-bold opacity-0 transition-opacity duration-300">
                     <!-- Feedback JS -->
                 </div>
+                <div id="tf-help-panel" class="hidden text-left bg-cyan-500/10 border border-cyan-400/20 rounded-2xl p-4 space-y-3"></div>
 
                 <!-- True / False Action Buttons -->
                 <div class="grid grid-cols-2 gap-4">
@@ -563,8 +569,9 @@
 
             <!-- GAME 4: KETIK CEPAT CARD -->
             <div id="practice-typing-card" class="hidden bg-space-card border border-space-border rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 text-center max-w-xl mx-auto">
-                <div class="flex justify-between items-center text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
+                <div class="flex flex-wrap justify-between items-center gap-2 text-sm font-semibold text-gray-400 border-b border-space-border pb-3">
                     <span class="text-emerald-400 font-bold"><i class="fa-solid fa-keyboard mr-1"></i> Ketik Cepat</span>
+                    <span id="typing-question-counter" class="text-cyan-300">Soal 0 / 20</span>
                     <span id="typing-score-counter" class="text-emerald-400"><i class="fa-solid fa-star mr-1"></i> Skor: 0</span>
                 </div>
 
@@ -575,6 +582,7 @@
                         9 × 5 = ?
                     </div>
                 </div>
+                <div id="typing-help-panel" class="hidden text-left bg-cyan-500/10 border border-cyan-400/20 rounded-2xl p-4 space-y-3"></div>
 
                 <!-- Answer Display Input Box -->
                 <div class="flex justify-center">
@@ -711,11 +719,11 @@
             <!-- Dashboard Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-space-border pb-4">
                 <div>
-                    <h2 class="font-display text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+                    <h2 class="font-display text-xl md:text-2xl font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-sliders text-indigo-400"></i> Dashboard Pengelolaan Guru
                     </h2>
                     <p class="text-xs md:text-sm text-gray-400">Kelola setoran resmi, pantau peta kemajuan siswa, dan atur akun siswa.</p>
-                    <p id="teacher-greeting" class="mt-2 text-sm md:text-base font-bold text-amber-300">Hai Ibu! Silakan lengkapi data guru.</p>
+                    <p id="teacher-greeting" class="mt-2 text-xl md:text-2xl font-bold text-amber-300">Hai Ibu! Silakan lengkapi data guru.</p>
                 </div>
 
                 <div class="flex items-center space-x-2">
@@ -806,7 +814,7 @@
                                 </label>
                                 <span id="threshold-display" class="font-bold text-amber-400">80% (Min. 16 dari 20 Soal)</span>
                             </div>
-                            <input type="range" id="threshold-slider" min="50" max="100" step="10" value="80" oninput="updateThresholdDisplay(this.value)" class="w-full accent-indigo-500 cursor-pointer">
+                            <input type="range" id="threshold-slider" min="50" max="100" step="10" value="80" oninput="updateThresholdDisplay(this.value)" onchange="updateThresholdDisplay(this.value)" class="w-full accent-indigo-500 cursor-pointer">
                         </div>
 
                         <!-- Button Buka Sesi Baru -->
@@ -835,6 +843,10 @@
                             <p class="text-gray-400">Silakan atur parameter di samping lalu tekan <strong>"BUKA SESI BARU"</strong>.</p>
                         </div>
 
+                        <button id="end-active-session-button" type="button" onclick="endCurrentSession()" class="hidden w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl shadow transition">
+                            <i class="fa-solid fa-circle-stop mr-2"></i>Akhiri Sesi Setoran
+                        </button>
+
                         <div class="text-xs text-indigo-300/90 bg-indigo-500/10 p-3 rounded-xl border border-indigo-500/20">
                             <i class="fa-solid fa-circle-info mr-1"></i> Bagikan atau tampilkan Kode Token ini di proyektor/papan tulis kelas.
                         </div>
@@ -850,6 +862,10 @@
             <!-- Teacher Tabs Nav Bar -->
             <div class="flex border-b border-space-border space-x-2 md:space-x-4 overflow-x-auto pt-2">
 
+                <button onclick="switchTeacherTab('tab-activity')" id="nav-tab-activity" class="teacher-tab-btn border-b-2 border-transparent text-gray-400 hover:text-gray-200 font-semibold px-4 py-2.5 text-sm whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-bolt"></i> Latihan Hari Ini
+                </button>
+
                 <button onclick="switchTeacherTab('tab-matrix')" id="nav-tab-matrix" class="teacher-tab-btn border-b-2 border-transparent text-gray-400 hover:text-gray-200 font-semibold px-4 py-2.5 text-sm whitespace-nowrap flex items-center gap-2">
                     <i class="fa-solid fa-map-location-dot"></i> Peta Kemajuan Per Siswa
                 </button>
@@ -862,6 +878,35 @@
                 <button onclick="switchTeacherTab('tab-settings')" id="nav-tab-settings" class="teacher-tab-btn border-b-2 border-transparent text-gray-400 hover:text-gray-200 font-semibold px-4 py-2.5 text-sm whitespace-nowrap flex items-center gap-2">
                     <i class="fa-solid fa-school"></i> Pengaturan Data Guru
                 </button>
+            </div>
+
+            <!-- TAB: AKTIVITAS LATIHAN HARI INI -->
+            <div id="teacher-content-activity" class="teacher-tab-content hidden space-y-6">
+                <div class="bg-space-card border border-space-border p-6 rounded-3xl space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-space-border pb-4">
+                        <div>
+                            <h3 class="font-display text-xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-bolt text-amber-400"></i> Siswa yang Latihan Hari Ini
+                            </h3>
+                            <p class="text-xs text-gray-400 mt-1">Daftar diperbarui otomatis saat siswa menjawab soal. Hari latihan berganti pukul 08.00 WIB.</p>
+                        </div>
+                        <span id="daily-practice-count" class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-sm font-bold">0 siswa</span>
+                    </div>
+                    <div id="daily-practice-students" class="space-y-2">
+                        <p class="text-sm text-gray-400">Belum ada siswa yang latihan sejak pukul 08.00 WIB.</p>
+                    </div>
+                </div>
+                <div class="bg-space-card border border-space-border p-6 rounded-3xl space-y-4">
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-400"></i> Perkalian yang Perlu Dilatih
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">Ringkasan dibuat dari jawaban latihan siswa dan diperbarui otomatis.</p>
+                    </div>
+                    <div id="teacher-practice-difficulty" class="space-y-2">
+                        <p class="text-sm text-gray-400">Belum ada catatan jawaban latihan.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 2: PETA KEMAJUAN PERKALIAN PER SISWA -->
@@ -1027,7 +1072,7 @@
 
     <!-- FOOTER -->
     <footer class="border-t border-space-border bg-space-card/40 py-4 text-center text-xs text-gray-500 mt-auto">
-        <p>JELAJAH PERKALIAN &copy; 2026 - Aplikasi Pembelajaran Interaktif Sekolah Dasar</p>
+        <p>JELAJAH PERKALIAN &copy; 2026 - Aplikasi Pembelajaran Interaktif Sekolah Dasar <span class="mx-1 text-indigo-300">|</span> by: Ariesta Moha</p>
     </footer>
 
 
@@ -1087,11 +1132,11 @@
                     <i class="fa-solid fa-key"></i>
                 </div>
                 <h3 class="font-display text-xl font-bold text-white">Masukkan Token Setoran Resmi</h3>
-                <p class="text-xs text-gray-400">Minta Kode Token Sesi dari Gurumu untuk memulai ujian.</p>
+                <p class="text-xs text-gray-400">Masukkan token dari gurumu. Token sesi baru berisi 3 karakter.</p>
             </div>
 
             <div class="space-y-2">
-                <input type="text" id="input-token-code" placeholder="Contoh: ROCKET88" class="w-full text-center text-2xl font-mono uppercase font-bold tracking-widest bg-space-dark border-2 border-space-border rounded-2xl py-3 text-yellow-300 focus:outline-none focus:border-pink-500">
+                <input type="text" id="input-token-code" autocomplete="off" placeholder="Contoh: A3K" class="w-full text-center text-2xl font-mono uppercase font-bold tracking-widest bg-space-dark border-2 border-space-border rounded-2xl py-3 text-yellow-300 focus:outline-none focus:border-pink-500">
                 <p id="token-error-msg" class="text-xs text-rose-400 font-bold text-center hidden">
                     Token tidak ditemukan atau tidak aktif!
                 </p>
@@ -1242,6 +1287,7 @@
         let currentTeacherSchoolId = null;
         let teacherRealtimeChannel = null;
         let realtimeRefreshBusy = false;
+        let dailyPracticeResetTimer = null;
         let activeTeacherTab = 'tab-session';
 
         // Empty account state; school accounts are loaded from the Jelajah database.
@@ -1250,6 +1296,8 @@
             currentStudentId: null,
             sessions: [],
             setoranResults: [],
+            practiceUpdatedAtByStudent: {},
+            practiceFactStats: [],
             teacherProfile: { schoolName: '', schoolCode: '', teacherInviteCode: '', teacherName: '', teacherUsername: '', className: '', academicYear: '' },
             totalPracticeQuestionsAnswered: 0
         };
@@ -1278,11 +1326,28 @@
             if (!supabaseReady) localStorage.setItem('jelajah_perkalian_state', JSON.stringify(appState));
         }
 
-        function recordPracticeQuestion() {
+        function recordPracticeQuestion(question = null, isCorrect = null) {
             appState.totalPracticeQuestionsAnswered++;
             saveState();
+            const hasFactResult = question && Number.isInteger(question.multiplicationTable)
+                && Number.isInteger(question.factor) && typeof isCorrect === 'boolean';
+            if (hasFactResult) {
+                const key = `${question.multiplicationTable}x${question.factor}`;
+                const fact = practiceState.weakFactStats[key] ||= {
+                    multiplication_table: question.multiplicationTable, factor: question.factor,
+                    correct_count: 0, wrong_count: 0
+                };
+                fact[isCorrect ? 'correct_count' : 'wrong_count']++;
+            }
             if (supabaseReady && accountRole === 'student' && supabaseClient) {
-                supabaseClient.rpc('jelajah_record_practice', { p_question_count: 1 })
+                const request = hasFactResult
+                    ? supabaseClient.rpc('jelajah_record_practice_answer', {
+                        p_multiplication_table: question.multiplicationTable,
+                        p_factor: question.factor,
+                        p_is_correct: isCorrect
+                    })
+                    : supabaseClient.rpc('jelajah_record_practice', { p_question_count: 1 });
+                request
                     .then(({ error }) => { if (error) console.error('Statistik latihan belum tersimpan:', error); });
             }
         }
@@ -1430,14 +1495,16 @@
             const sessions = sessionsRes.data || [];
             const studentIds = students.map(s => s.id);
             const sessionIds = sessions.map(s => s.id);
-            const [progressRes, participantsRes, practiceRes] = await Promise.all([
+            const [progressRes, participantsRes, practiceRes, practiceFactsRes] = await Promise.all([
                 studentIds.length ? supabaseClient.from('jelajah_student_progress').select('*').in('student_id', studentIds) : Promise.resolve({ data: [], error: null }),
                 sessionIds.length ? supabaseClient.from('jelajah_session_participants').select('*').in('session_id', sessionIds) : Promise.resolve({ data: [], error: null }),
-                studentIds.length ? supabaseClient.from('jelajah_practice_stats').select('*').in('student_id', studentIds) : Promise.resolve({ data: [], error: null })
+                studentIds.length ? supabaseClient.from('jelajah_practice_stats').select('*').in('student_id', studentIds) : Promise.resolve({ data: [], error: null }),
+                studentIds.length ? supabaseClient.from('jelajah_practice_fact_stats').select('*').in('student_id', studentIds) : Promise.resolve({ data: [], error: null })
             ]);
             if (progressRes.error) throw progressRes.error;
             if (participantsRes.error) throw participantsRes.error;
             if (practiceRes.error) throw practiceRes.error;
+            if (practiceFactsRes.error) throw practiceFactsRes.error;
 
             const progressByStudent = {};
             (progressRes.data || []).forEach(row => {
@@ -1446,6 +1513,7 @@
             const participantsBySession = {};
             (participantsRes.data || []).forEach(row => (participantsBySession[row.session_id] ||= []).push(row.student_id));
             const activeStudents = students.filter(s => s.is_active);
+            const activeStudentIds = new Set(activeStudents.map(s => s.id));
             const nameById = Object.fromEntries(students.map(s => [s.id, s.full_name]));
 
             appState.teacherProfile = {
@@ -1470,6 +1538,8 @@
             appState.setoranResults = (resultsRes.data || []).map(row => ({
                 ...mapResultRow(row), studentName: nameById[row.student_id] || 'Siswa'
             }));
+            appState.practiceUpdatedAtByStudent = Object.fromEntries((practiceRes.data || []).map(row => [row.student_id, row.updated_at]));
+            appState.practiceFactStats = (practiceFactsRes.data || []).filter(row => activeStudentIds.has(row.student_id));
             appState.totalPracticeQuestionsAnswered = (practiceRes.data || []).reduce((sum, row) => sum + row.questions_answered, 0);
             updateTeacherGreeting();
             updateTeacherLoginUsernameHint();
@@ -1485,13 +1555,14 @@
                 .select('id,login_code').eq('id', student.school_id).single();
             if (schoolError) throw schoolError;
 
-            const [progressRes, resultsRes, practiceRes, sessionsRes] = await Promise.all([
+            const [progressRes, resultsRes, practiceRes, sessionsRes, practiceFactsRes] = await Promise.all([
                 supabaseClient.from('jelajah_student_progress').select('*').eq('student_id', student.id),
                 supabaseClient.from('jelajah_submission_results').select('*').eq('student_id', student.id).order('completed_at', { ascending: false }),
                 supabaseClient.from('jelajah_practice_stats').select('*').eq('student_id', student.id).maybeSingle(),
-                supabaseClient.from('jelajah_sessions').select('*').eq('is_active', true).order('created_at', { ascending: false })
+                supabaseClient.from('jelajah_sessions').select('*').eq('is_active', true).order('created_at', { ascending: false }),
+                supabaseClient.from('jelajah_practice_fact_stats').select('*').eq('student_id', student.id)
             ]);
-            for (const result of [progressRes, resultsRes, practiceRes, sessionsRes]) if (result.error) throw result.error;
+            for (const result of [progressRes, resultsRes, practiceRes, sessionsRes, practiceFactsRes]) if (result.error) throw result.error;
             const checkpoints = emptyCheckpointMap();
             (progressRes.data || []).forEach(row => { checkpoints[row.multiplication_table] = row.status; });
             appState.students = [{
@@ -1506,6 +1577,8 @@
             }));
             appState.setoranResults = (resultsRes.data || []).map(mapResultRow);
             appState.totalPracticeQuestionsAnswered = practiceRes.data?.questions_answered || 0;
+            appState.practiceFactStats = practiceFactsRes.data || [];
+            practiceState.weakFactStats = Object.fromEntries(appState.practiceFactStats.map(row => [`${row.multiplication_table}x${row.factor}`, row]));
         }
 
         async function refreshTeacherWorkspaceRealtime() {
@@ -1526,6 +1599,7 @@
         function startTeacherRealtime() {
             if (!supabaseClient || !supabaseUser) return;
             if (teacherRealtimeChannel) supabaseClient.removeChannel(teacherRealtimeChannel);
+            scheduleDailyPracticeReset();
             const refresh = () => refreshTeacherWorkspaceRealtime();
             teacherRealtimeChannel = supabaseClient.channel(`jelajah-class-${supabaseUser.id}`)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_students', filter: `teacher_id=eq.${supabaseUser.id}` }, refresh)
@@ -1533,6 +1607,7 @@
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_submission_results' }, refresh)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_student_progress' }, refresh)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_practice_stats' }, refresh)
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_practice_fact_stats' }, refresh)
                 .subscribe();
         }
 
@@ -1666,6 +1741,10 @@
         }
 
         async function logoutOrSwitchAccount() {
+            if (dailyPracticeResetTimer) {
+                clearTimeout(dailyPracticeResetTimer);
+                dailyPracticeResetTimer = null;
+            }
             if (teacherRealtimeChannel && supabaseClient) {
                 await supabaseClient.removeChannel(teacherRealtimeChannel);
                 teacherRealtimeChannel = null;
@@ -1679,6 +1758,9 @@
             appState.students = [];
             appState.sessions = [];
             appState.setoranResults = [];
+            appState.practiceUpdatedAtByStudent = {};
+            appState.practiceFactStats = [];
+            practiceState.weakFactStats = {};
             switchView('login');
         }
 
@@ -1814,6 +1896,13 @@
             selectedGame: 'quiz', // 'quiz', 'memory', 'truefalse', 'typing'
             selectedTables: [2, 3],
             score: 0,
+            questionLimit: 20,
+            questionsAnswered: 0,
+            lastQuestionKey: null,
+            finished: false,
+            currentQuestionCounted: false,
+            questionResponded: false,
+            weakFactStats: {},
             currentQuestion: null,
             usedQuestions: new Set(), // Track asked questions e.g. "6x7" to avoid repetition
             
@@ -1877,6 +1966,11 @@
             }
             practiceState.selectedTables = selected;
             practiceState.score = 0;
+            practiceState.questionsAnswered = 0;
+            practiceState.lastQuestionKey = null;
+            practiceState.finished = false;
+            practiceState.currentQuestionCounted = false;
+            practiceState.questionResponded = false;
             practiceState.usedQuestions.clear(); // Reset used questions pool for fresh unique questions
 
             document.getElementById('practice-setup-card').classList.add('hidden');
@@ -1892,30 +1986,107 @@
             }
         }
 
-        // GENERATE UNIQUE RANDOM MATH QUESTION (WITHOUT REPETITION)
-        function generateUniqueMathQuestion(allowedTables) {
-            // Calculate total possible combinations e.g. tables * 10
-            const allPairs = [];
-            allowedTables.forEach(t => {
-                for (let m = 1; m <= 10; m++) {
-                    allPairs.push({ t, m, key: `${t}x${m}` });
-                }
-            });
+        function updatePracticeQuestionCounters() {
+            const label = `Soal ${practiceState.questionsAnswered} / ${practiceState.questionLimit}`;
+            ['practice-question-counter', 'memory-question-counter', 'tf-question-counter', 'typing-question-counter']
+                .forEach(id => { const el = document.getElementById(id); if (el) el.textContent = label; });
+        }
 
-            // Filter unused questions
-            let available = allPairs.filter(p => !practiceState.usedQuestions.has(p.key));
+        function countPracticeQuestion() {
+            if (practiceState.finished || practiceState.questionsAnswered >= practiceState.questionLimit) return false;
+            practiceState.questionsAnswered++;
+            updatePracticeQuestionCounters();
+            return true;
+        }
 
-            // If all questions have been asked, reset used history to start over
-            if (available.length === 0) {
-                practiceState.usedQuestions.clear();
-                available = allPairs;
+        function finishPracticeGame() {
+            if (practiceState.finished) return;
+            practiceState.finished = true;
+            window.removeEventListener('keydown', handleKeyboardTyping);
+            const summary = practiceState.selectedGame === 'memory'
+                ? `Kamu menemukan ${practiceState.matchedCount} dari 6 pasangan.`
+                : `Jawaban benar/skor: ${practiceState.score}.`;
+            alert(`Latihan selesai! Kamu mengerjakan ${practiceState.questionsAnswered} dari ${practiceState.questionLimit} soal. ${summary}`);
+            backToPracticeSubmenu();
+        }
+
+        function clearVisualPracticeHint(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.replaceChildren();
+            container.classList.add('hidden');
+        }
+
+        function showVisualPracticeHint(question, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container || !question) return;
+            const title = document.createElement('p');
+            title.className = 'font-bold text-cyan-200';
+            title.textContent = `Bayangkan ${question.num1} kelompok, masing-masing berisi ${question.num2}.`;
+
+            const array = document.createElement('div');
+            array.className = 'mx-auto grid w-fit gap-1';
+            array.style.gridTemplateColumns = `repeat(${question.num2}, 0.65rem)`;
+            array.setAttribute('role', 'img');
+            array.setAttribute('aria-label', `${question.num1} baris, masing-masing ${question.num2} titik`);
+            for (let i = 0; i < question.answer; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'h-2 w-2 rounded-full bg-cyan-300';
+                array.appendChild(dot);
             }
 
-            // Pick a random question from available pool
-            const picked = available[Math.floor(Math.random() * available.length)];
+            const formula = document.createElement('p');
+            formula.className = 'text-sm text-white';
+            formula.textContent = `${Array(question.num1).fill(question.num2).join(' + ')} = ${question.answer}`;
+            container.replaceChildren(title, array, formula);
+            container.classList.remove('hidden');
+        }
+
+        // GENERATE RANDOM MATH QUESTION; A×B AND B×A SHARE ONE QUESTION ID.
+        function generateUniqueMathQuestion(allowedTables, options = {}) {
+            const uniquePairs = new Map();
+            allowedTables.forEach(t => {
+                for (let m = 1; m <= 10; m++) {
+                    const factors = [t, m].sort((a, b) => a - b);
+                    const key = `${factors[0]}x${factors[1]}`;
+                    if (!uniquePairs.has(key)) uniquePairs.set(key, { t, m, key });
+                }
+            });
+            const allPairs = Array.from(uniquePairs.values());
+
+            // Spread the round across different facts before repeating questions.
+            let available = allPairs.filter(p => !practiceState.usedQuestions.has(p.key));
+
+            // If the pool is exhausted, start a new round without repeating the last question immediately.
+            if (available.length === 0) {
+                practiceState.usedQuestions.clear();
+                available = allPairs.filter(p => p.key !== practiceState.lastQuestionKey);
+                if (available.length === 0) available = allPairs;
+            }
+
+            const adaptive = options.adaptive !== false;
+            const weaknessFor = pair => {
+                const stat = practiceState.weakFactStats[`${pair.t}x${pair.m}`];
+                return stat ? Math.max(0, (2 * (Number(stat.wrong_count) || 0)) - (Number(stat.correct_count) || 0)) : 0;
+            };
+            const weakCandidates = adaptive
+                ? allPairs.filter(pair => pair.key !== practiceState.lastQuestionKey && weaknessFor(pair) > 0)
+                : [];
+            let picked;
+            if (weakCandidates.length && Math.random() < 0.5) {
+                const totalWeight = weakCandidates.reduce((sum, pair) => sum + 1 + Math.min(8, weaknessFor(pair)), 0);
+                let draw = Math.random() * totalWeight;
+                picked = weakCandidates.find(pair => (draw -= 1 + Math.min(8, weaknessFor(pair))) < 0) || weakCandidates[weakCandidates.length - 1];
+            } else {
+                const nonConsecutive = available.filter(pair => pair.key !== practiceState.lastQuestionKey);
+                const pool = nonConsecutive.length ? nonConsecutive : available;
+                picked = pool[Math.floor(Math.random() * pool.length)];
+            }
             practiceState.usedQuestions.add(picked.key);
+            practiceState.lastQuestionKey = picked.key;
 
             const answer = picked.t * picked.m;
+            const reverseFactors = picked.t !== picked.m && Math.random() < 0.5;
 
             // Generate 3 unique wrong options
             const options = new Set([answer]);
@@ -1926,8 +2097,10 @@
             }
 
             return {
-                num1: picked.t,
-                num2: picked.m,
+                num1: reverseFactors ? picked.m : picked.t,
+                num2: reverseFactors ? picked.t : picked.m,
+                multiplicationTable: picked.t,
+                factor: picked.m,
                 answer: answer,
                 options: Array.from(options).sort(() => Math.random() - 0.5)
             };
@@ -1935,17 +2108,21 @@
 
         // Helper function untuk membuat soal pada Setoran Resmi
         function generateMathQuestion(allowedTables) {
-            return generateUniqueMathQuestion(allowedTables);
+            return generateUniqueMathQuestion(allowedTables, { adaptive: false });
         }
 
         // --- GAME 1: PILIHAN GANDA ---
         function startQuizGame() {
             document.getElementById('practice-quiz-card').classList.remove('hidden');
             document.getElementById('practice-score-counter').innerHTML = `<i class="fa-solid fa-star mr-1"></i> Benar: 0`;
+            updatePracticeQuestionCounters();
             nextPracticeQuestion();
         }
 
         function nextPracticeQuestion() {
+            if (practiceState.questionsAnswered >= practiceState.questionLimit) { finishPracticeGame(); return; }
+            clearVisualPracticeHint('practice-help-panel');
+            practiceState.questionResponded = false;
             practiceState.currentQuestion = generateUniqueMathQuestion(practiceState.selectedTables);
             const q = practiceState.currentQuestion;
 
@@ -1964,11 +2141,15 @@
         }
 
         function checkPracticeAnswer(selected) {
+            if (practiceState.questionResponded || !countPracticeQuestion()) return;
+            practiceState.questionResponded = true;
             const q = practiceState.currentQuestion;
             const feedbackEl = document.getElementById('practice-feedback');
-            recordPracticeQuestion();
+            const isCorrect = selected === q.answer;
+            recordPracticeQuestion(q, isCorrect);
 
-            if (selected === q.answer) {
+            if (isCorrect) {
+                clearVisualPracticeHint('practice-help-panel');
                 playSound('correct');
                 practiceState.score++;
                 document.getElementById('practice-score-counter').innerHTML = `<i class="fa-solid fa-star mr-1"></i> Benar: ${practiceState.score}`;
@@ -1976,13 +2157,14 @@
             } else {
                 playSound('wrong');
                 feedbackEl.innerHTML = `<span class="text-rose-400"><i class="fa-solid fa-circle-xmark mr-1"></i> Jawaban yang benar adalah ${q.answer}</span>`;
+                showVisualPracticeHint(q, 'practice-help-panel');
             }
 
             feedbackEl.classList.remove('opacity-0');
             setTimeout(() => {
                 feedbackEl.classList.add('opacity-0');
                 nextPracticeQuestion();
-            }, 1200);
+            }, isCorrect ? 1200 : 3000);
         }
 
         // --- GAME 2: KARTU PASANGAN ---
@@ -1994,12 +2176,18 @@
         function initMemoryGame() {
             practiceState.flippedCards = [];
             practiceState.matchedCount = 0;
+            practiceState.questionsAnswered = 0;
+            practiceState.lastQuestionKey = null;
+            practiceState.finished = false;
+            practiceState.usedQuestions.clear();
+            clearVisualPracticeHint('memory-help-panel');
+            updatePracticeQuestionCounters();
             
             // Pick 6 unique math problems based on allowed tables
             const pairs = [];
             for (let i = 0; i < 6; i++) {
-                const q = generateUniqueMathQuestion(practiceState.selectedTables);
-                pairs.push({ id: i, type: 'expr', val: `${q.num1} × ${q.num2}`, pairId: i });
+                const q = generateUniqueMathQuestion(practiceState.selectedTables, { adaptive: false });
+                pairs.push({ id: i, type: 'expr', val: `${q.num1} × ${q.num2}`, multiplicationTable: q.multiplicationTable, factor: q.factor, pairId: i });
                 pairs.push({ id: i, type: 'ans', val: `${q.answer}`, pairId: i });
             }
 
@@ -2036,6 +2224,7 @@
         }
 
         function flipMemoryCard(index) {
+            if (practiceState.finished || practiceState.questionsAnswered >= practiceState.questionLimit) return;
             const card = practiceState.memoryCards[index];
             if (card.isFlipped || card.isMatched || practiceState.flippedCards.length >= 2) return;
 
@@ -2045,11 +2234,16 @@
             renderMemoryCards();
 
             if (practiceState.flippedCards.length === 2) {
-                recordPracticeQuestion();
+                countPracticeQuestion();
                 saveState();
 
                 const [first, second] = practiceState.flippedCards;
+                const expressionCard = [first.card, second.card].find(item => item.type === 'expr');
                 if (first.card.pairId === second.card.pairId) {
+                    recordPracticeQuestion(expressionCard ? {
+                        multiplicationTable: expressionCard.multiplicationTable, factor: expressionCard.factor
+                    } : null, expressionCard ? true : null);
+                    clearVisualPracticeHint('memory-help-panel');
                     // Match found!
                     first.card.isMatched = true;
                     second.card.isMatched = true;
@@ -2059,17 +2253,27 @@
                     
                     if (practiceState.matchedCount >= 6) {
                         playSound('fanfare');
-                        setTimeout(() => {
-                            alert("Selamat! Kamu berhasil mencocokkan seluruh Kartu Pasangan! 🎉");
-                        }, 300);
+                        setTimeout(() => finishPracticeGame(), 300);
                     }
                 } else {
+                    recordPracticeQuestion(expressionCard ? {
+                        multiplicationTable: expressionCard.multiplicationTable, factor: expressionCard.factor
+                    } : null, expressionCard ? false : null);
+                    if (expressionCard) {
+                        const q = {
+                            num1: Number(expressionCard.val.split(' × ')[0]),
+                            num2: Number(expressionCard.val.split(' × ')[1]),
+                            answer: expressionCard.multiplicationTable * expressionCard.factor
+                        };
+                        showVisualPracticeHint(q, 'memory-help-panel');
+                    }
                     // Not match
                     setTimeout(() => {
                         first.card.isFlipped = false;
                         second.card.isFlipped = false;
                         practiceState.flippedCards = [];
                         renderMemoryCards();
+                        if (practiceState.questionsAnswered >= practiceState.questionLimit) finishPracticeGame();
                     }, 900);
                 }
             }
@@ -2079,10 +2283,14 @@
         function startTrueFalseGame() {
             document.getElementById('practice-truefalse-card').classList.remove('hidden');
             document.getElementById('tf-score-counter').innerHTML = `<i class="fa-solid fa-star mr-1"></i> Skor: 0`;
+            updatePracticeQuestionCounters();
             nextTrueFalseQuestion();
         }
 
         function nextTrueFalseQuestion() {
+            if (practiceState.questionsAnswered >= practiceState.questionLimit) { finishPracticeGame(); return; }
+            clearVisualPracticeHint('tf-help-panel');
+            practiceState.questionResponded = false;
             const q = generateUniqueMathQuestion(practiceState.selectedTables);
             const isStatementTrue = Math.random() < 0.5; // 50% chance TRUE, 50% FALSE
             
@@ -2103,12 +2311,16 @@
         }
 
         function checkTrueFalseAnswer(userChoice) {
+            if (practiceState.questionResponded || !countPracticeQuestion()) return;
+            practiceState.questionResponded = true;
             const st = practiceState.currentTFStatement;
             const feedbackEl = document.getElementById('tf-feedback');
-                recordPracticeQuestion();
+            const isCorrect = userChoice === st.isTrue;
+            recordPracticeQuestion(st.question, isCorrect);
             saveState();
 
-            if (userChoice === st.isTrue) {
+            if (isCorrect) {
+                clearVisualPracticeHint('tf-help-panel');
                 playSound('correct');
                 practiceState.score += 10;
                 document.getElementById('tf-score-counter').innerHTML = `<i class="fa-solid fa-star mr-1"></i> Skor: ${practiceState.score}`;
@@ -2117,19 +2329,21 @@
                 playSound('wrong');
                 const realAnswer = st.question.num1 * st.question.num2;
                 feedbackEl.innerHTML = `<span class="text-rose-400"><i class="fa-solid fa-circle-xmark mr-1"></i> Kurang Tepat! Seharusnya ${st.question.num1} × ${st.question.num2} = ${realAnswer}</span>`;
+                showVisualPracticeHint(st.question, 'tf-help-panel');
             }
 
             feedbackEl.classList.remove('opacity-0');
             setTimeout(() => {
                 feedbackEl.classList.add('opacity-0');
                 nextTrueFalseQuestion();
-            }, 1200);
+            }, isCorrect ? 1200 : 3000);
         }
 
         // --- GAME 4: KETIK CEPAT ---
         function startTypingGame() {
             document.getElementById('practice-typing-card').classList.remove('hidden');
             document.getElementById('typing-score-counter').innerHTML = `<i class="fa-solid fa-star mr-1"></i> Skor: 0`;
+            updatePracticeQuestionCounters();
             clearTypingInput();
             nextTypingQuestion();
 
@@ -2152,7 +2366,10 @@
         }
 
         function nextTypingQuestion() {
+            if (practiceState.questionsAnswered >= practiceState.questionLimit) { finishPracticeGame(); return; }
+            clearVisualPracticeHint('typing-help-panel');
             clearTypingInput();
+            practiceState.currentQuestionCounted = false;
             practiceState.currentQuestion = generateUniqueMathQuestion(practiceState.selectedTables);
             const q = practiceState.currentQuestion;
 
@@ -2171,22 +2388,31 @@
         }
 
         function submitTypingAnswer() {
+            if (practiceState.finished) return;
             const input = document.getElementById('typing-answer-input');
             const val = parseInt(input.value);
 
             if (isNaN(val)) return;
 
             const q = practiceState.currentQuestion;
-            recordPracticeQuestion();
+            const isCorrect = val === q.answer;
+            recordPracticeQuestion(q, isCorrect);
             saveState();
+            if (!practiceState.currentQuestionCounted) {
+                if (!countPracticeQuestion()) return;
+                practiceState.currentQuestionCounted = true;
+            }
 
-            if (val === q.answer) {
+            if (isCorrect) {
+                clearVisualPracticeHint('typing-help-panel');
                 playSound('correct');
                 practiceState.score += 10;
                 document.getElementById('typing-score-counter').innerHTML = `<i class="fa-solid fa-star mr-1"></i> Skor: ${practiceState.score}`;
-                nextTypingQuestion();
+                if (practiceState.questionsAnswered >= practiceState.questionLimit) finishPracticeGame();
+                else nextTypingQuestion();
             } else {
                 playSound('wrong');
+                showVisualPracticeHint(q, 'typing-help-panel');
                 input.classList.add('border-rose-500', 'text-rose-400');
                 setTimeout(() => {
                     input.classList.remove('border-rose-500', 'text-rose-400');
@@ -2245,6 +2471,7 @@
             
             // Prepare 20 randomized questions according to teacher selection
             practiceState.usedQuestions.clear();
+            practiceState.lastQuestionKey = null;
             const questions = [];
             for (let i = 0; i < session.totalQuestions; i++) {
                 questions.push(generateMathQuestion(session.tables));
@@ -2548,12 +2775,105 @@
             greeting.innerText = name ? `Hai Ibu ${name}! 👋` : 'Hai Ibu! Silakan lengkapi data guru.';
         }
 
+        function getJakartaPracticeDayBoundary(now = new Date(), nextDay = false) {
+            const parts = new Intl.DateTimeFormat('en-GB', {
+                timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', hourCycle: 'h23'
+            }).formatToParts(now);
+            const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+            const boundary = new Date(Date.UTC(Number(values.year), Number(values.month) - 1, Number(values.day), 1));
+            const hour = Number(values.hour);
+            if (nextDay && hour >= 8) boundary.setUTCDate(boundary.getUTCDate() + 1);
+            if (!nextDay && hour < 8) boundary.setUTCDate(boundary.getUTCDate() - 1);
+            return boundary;
+        }
+
+        function scheduleDailyPracticeReset() {
+            if (dailyPracticeResetTimer) clearTimeout(dailyPracticeResetTimer);
+            if (accountRole !== 'teacher') return;
+            const nextBoundary = getJakartaPracticeDayBoundary(new Date(), true);
+            dailyPracticeResetTimer = setTimeout(() => {
+                renderDailyPracticeToday();
+                scheduleDailyPracticeReset();
+            }, Math.max(1000, nextBoundary.getTime() - Date.now() + 1000));
+        }
+
+        function renderDailyPracticeToday() {
+            const container = document.getElementById('daily-practice-students');
+            const count = document.getElementById('daily-practice-count');
+            if (!container || !count) return;
+            const boundary = getJakartaPracticeDayBoundary();
+            const practiced = appState.students
+                .map(student => ({ student, updatedAt: appState.practiceUpdatedAtByStudent?.[student.id] }))
+                .filter(item => item.updatedAt && new Date(item.updatedAt).getTime() >= boundary.getTime())
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            count.textContent = `${practiced.length} siswa`;
+            container.replaceChildren();
+            if (!practiced.length) {
+                const empty = document.createElement('p');
+                empty.className = 'text-sm text-gray-400';
+                empty.textContent = 'Belum ada siswa yang latihan sejak pukul 08.00 WIB.';
+                container.appendChild(empty);
+                return;
+            }
+            practiced.forEach(({ student, updatedAt }) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between gap-3 bg-space-dark/70 border border-space-border rounded-xl px-4 py-3';
+                const name = document.createElement('span');
+                name.className = 'font-semibold text-white';
+                name.textContent = student.name;
+                const time = document.createElement('span');
+                time.className = 'text-xs text-cyan-300 whitespace-nowrap';
+                time.textContent = `Latihan terakhir ${new Date(updatedAt).toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit' })} WIB`;
+                row.append(name, time);
+                container.appendChild(row);
+            });
+        }
+
+        function renderTeacherPracticeDifficulty() {
+            const container = document.getElementById('teacher-practice-difficulty');
+            if (!container) return;
+            const byTable = new Map();
+            (appState.practiceFactStats || []).forEach(row => {
+                const wrong = Number(row.wrong_count) || 0;
+                if (!wrong) return;
+                const table = Number(row.multiplication_table);
+                const summary = byTable.get(table) || { wrong: 0, students: new Set() };
+                summary.wrong += wrong;
+                summary.students.add(row.student_id);
+                byTable.set(table, summary);
+            });
+            const ranked = Array.from(byTable.entries()).sort((a, b) => b[1].wrong - a[1].wrong);
+            container.replaceChildren();
+            if (!ranked.length) {
+                const empty = document.createElement('p');
+                empty.className = 'text-sm text-gray-400';
+                empty.textContent = 'Belum ada catatan jawaban latihan. Catatan kesulitan mulai terkumpul setelah fitur latihan terbaru digunakan.';
+                container.appendChild(empty);
+                return;
+            }
+            ranked.forEach(([table, summary], index) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between gap-3 bg-space-dark/70 border border-space-border rounded-xl px-4 py-3';
+                const title = document.createElement('span');
+                title.className = 'font-semibold text-white';
+                title.textContent = `${index + 1}. Perkalian ×${table}`;
+                const details = document.createElement('span');
+                details.className = 'text-xs text-amber-300 text-right';
+                details.textContent = `${summary.wrong} jawaban salah · ${summary.students.size} siswa`;
+                row.append(title, details);
+                container.appendChild(row);
+            });
+        }
+
         function renderTeacherDashboard() {
             document.getElementById('current-user-name').innerText = "Dashboard Guru";
             document.getElementById('user-badge-icon').className = "fa-solid fa-chalkboard-user text-purple-400";
             updateTeacherGreeting();
 
             const activeSession = appState.sessions.find(s => s.active);
+            const endSessionButton = document.getElementById('end-active-session-button');
+            if (endSessionButton) endSessionButton.classList.toggle('hidden', !activeSession);
             if (activeSession) {
                 document.getElementById('active-token-banner').innerText = activeSession.token;
                 
@@ -2569,7 +2889,12 @@
                     <p>⏱️ Durasi Per Soal: <strong>${activeSession.timePerQuestion} Detik</strong></p>
                     <p>🏆 Ambang Kelulusan: <strong>${activeSession.passThresholdPercentage}%</strong></p>
                 `;
+            } else {
+                document.getElementById('active-token-banner').innerText = '- BELUM ADA -';
+                document.getElementById('active-session-info-details').innerHTML = '<p class="text-gray-400">Tidak ada sesi setoran resmi yang sedang dibuka.</p>';
             }
+            renderDailyPracticeToday();
+            renderTeacherPracticeDifficulty();
 
             // Render Perkalian Checkboxes (x2 - x9)
             const sessTableContainer = document.getElementById('teacher-session-tables');
@@ -2610,6 +2935,37 @@
             chks.forEach(c => c.checked = !allChecked);
         }
 
+        function updateThresholdDisplay(value) {
+            const percentage = Math.max(50, Math.min(100, Number(value) || 80));
+            const minimumCorrect = Math.ceil((20 * percentage) / 100);
+            const display = document.getElementById('threshold-display');
+            if (display) display.textContent = `${percentage}% (Min. ${minimumCorrect} dari 20 Soal)`;
+        }
+
+        async function endCurrentSession() {
+            const activeSession = appState.sessions.find(session => session.active);
+            if (!activeSession) return;
+            if (!supabaseReady || !supabaseClient || !currentTeacherDbId) {
+                alert('Guru belum terhubung ke proyek Supabase Jelajah.');
+                return;
+            }
+            if (!confirm(`Akhiri sesi setoran dengan token ${activeSession.token}? Siswa tidak bisa mengirim setoran baru dengan token ini.`)) return;
+            try {
+                const { error } = await supabaseClient.from('jelajah_sessions')
+                    .update({ is_active: false })
+                    .eq('id', activeSession.id)
+                    .eq('teacher_id', currentTeacherDbId)
+                    .eq('is_active', true);
+                if (error) throw error;
+                await loadTeacherWorkspace();
+                renderTeacherDashboard();
+                alert('Sesi setoran telah diakhiri.');
+            } catch (error) {
+                console.error('Gagal mengakhiri sesi setoran:', error);
+                alert(`Sesi belum berhasil diakhiri: ${error.message || error}`);
+            }
+        }
+
         async function generateNewSessionToken() {
             if (!supabaseReady || !supabaseClient || !currentTeacherDbId) {
                 alert('Guru belum terhubung ke proyek Supabase Jelajah.');
@@ -2633,33 +2989,44 @@
             const timeVal = parseInt(timeRadio ? timeRadio.value : 10);
             const threshold = parseInt(document.getElementById('threshold-slider').value);
 
-            const randomBytes = new Uint8Array(5);
-            crypto.getRandomValues(randomBytes);
             const tokenAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            const randomCode = 'JELA' + Array.from(randomBytes, byte => tokenAlphabet[byte % tokenAlphabet.length]).join('');
 
             try {
-                const { error: closeError } = await supabaseClient.from('jelajah_sessions')
-                    .update({ is_active: false }).eq('teacher_id', currentTeacherDbId).eq('is_active', true);
-                if (closeError) throw closeError;
-
-                const { data: created, error: createError } = await supabaseClient.from('jelajah_sessions').insert({
-                    teacher_id: currentTeacherDbId,
-                    school_id: currentTeacherSchoolId,
-                    token: randomCode,
-                    multiplication_tables: tables,
-                    time_per_question: timeVal,
-                    pass_threshold: threshold,
-                    total_questions: 20,
-                    is_active: true
-                }).select('*').single();
-                if (createError) throw createError;
+                let created = null;
+                let randomCode = '';
+                for (let attempt = 0; attempt < 12; attempt++) {
+                    do {
+                        const randomBytes = new Uint8Array(3);
+                        crypto.getRandomValues(randomBytes);
+                        randomCode = Array.from(randomBytes, byte => tokenAlphabet[byte % tokenAlphabet.length]).join('');
+                    } while (!/[A-Z]/.test(randomCode) || !/[2-9]/.test(randomCode));
+                    const { data, error } = await supabaseClient.from('jelajah_sessions').insert({
+                        teacher_id: currentTeacherDbId,
+                        school_id: currentTeacherSchoolId,
+                        token: randomCode,
+                        multiplication_tables: tables,
+                        time_per_question: timeVal,
+                        pass_threshold: threshold,
+                        total_questions: 20,
+                        is_active: true
+                    }).select('*').single();
+                    if (!error) { created = data; break; }
+                    if (error.code !== '23505') throw error;
+                }
+                if (!created) throw new Error('Kode 3 karakter belum berhasil dibuat. Silakan coba buka sesi lagi.');
 
                 const participantRows = targetStudentIds.map(studentId => ({ session_id: created.id, student_id: studentId, school_id: currentTeacherSchoolId }));
                 const { error: participantsError } = await supabaseClient.from('jelajah_session_participants').insert(participantRows);
                 if (participantsError) {
                     await supabaseClient.from('jelajah_sessions').update({ is_active: false }).eq('id', created.id);
                     throw participantsError;
+                }
+
+                const { error: closeError } = await supabaseClient.from('jelajah_sessions')
+                    .update({ is_active: false }).eq('teacher_id', currentTeacherDbId).eq('is_active', true).neq('id', created.id);
+                if (closeError) {
+                    await supabaseClient.from('jelajah_sessions').update({ is_active: false }).eq('id', created.id);
+                    throw closeError;
                 }
 
                 await loadTeacherWorkspace();
