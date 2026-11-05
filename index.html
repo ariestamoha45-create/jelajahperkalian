@@ -659,6 +659,25 @@
                 <div class="grid grid-cols-2 gap-4" id="setoran-answers-grid">
                     <!-- Dynamic Answer Buttons -->
                 </div>
+
+                <div id="final-exam-typing-panel" class="hidden max-w-sm mx-auto space-y-3">
+                    <label for="final-exam-answer-input" class="block text-sm font-bold text-cyan-200">Ketik hasil perkalian:</label>
+                    <input id="final-exam-answer-input" type="text" inputmode="numeric" autocomplete="off" placeholder="Ketik jawaban" onkeydown="if(event.key==='Enter')submitFinalExamTypingAnswer()" class="w-full text-center text-3xl font-display font-bold bg-space-dark border-2 border-cyan-500/60 rounded-2xl py-4 text-white tracking-widest focus:outline-none focus:border-cyan-300">
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="typeFinalExamKey('1')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">1</button>
+                        <button type="button" onclick="typeFinalExamKey('2')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">2</button>
+                        <button type="button" onclick="typeFinalExamKey('3')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">3</button>
+                        <button type="button" onclick="typeFinalExamKey('4')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">4</button>
+                        <button type="button" onclick="typeFinalExamKey('5')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">5</button>
+                        <button type="button" onclick="typeFinalExamKey('6')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">6</button>
+                        <button type="button" onclick="typeFinalExamKey('7')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">7</button>
+                        <button type="button" onclick="typeFinalExamKey('8')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">8</button>
+                        <button type="button" onclick="typeFinalExamKey('9')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">9</button>
+                        <button type="button" onclick="clearFinalExamAnswer()" class="bg-rose-500/20 border border-rose-500/30 rounded-xl py-3 text-rose-200 font-bold text-xs"><i class="fa-solid fa-delete-left"></i> Hapus</button>
+                        <button type="button" onclick="typeFinalExamKey('0')" class="bg-space-dark border border-space-border rounded-xl py-3 text-white font-bold">0</button>
+                        <button type="button" onclick="submitFinalExamTypingAnswer()" class="bg-emerald-600 border border-emerald-500 rounded-xl py-3 text-white font-bold text-xs">Jawab</button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2550,7 +2569,11 @@
                 const examTablePlan = examTables.flatMap(table => [table, table]);
                 examTablePlan.push(2,3,4,5);
                 examTablePlan.sort(() => Math.random() - 0.5);
-                examTablePlan.forEach(table => questions.push(generateMathQuestion([table])));
+                const examAnswerModes = [...Array(10).fill('typing'), ...Array(10).fill('multiple-choice')]
+                    .sort(() => Math.random() - 0.5);
+                examTablePlan.forEach((table, index) => {
+                    questions.push({ ...generateMathQuestion([table]), answerMode: examAnswerModes[index] });
+                });
             } else {
                 for (let i = 0; i < session.totalQuestions; i++) questions.push(generateMathQuestion(session.tables));
             }
@@ -2591,15 +2614,25 @@
 
             // Answer options buttons
             const grid = document.getElementById('setoran-answers-grid');
+            const typingPanel = document.getElementById('final-exam-typing-panel');
+            const isTypingQuestion = state.session.sessionType === 'FINAL_EXAM' && q.answerMode === 'typing';
+            grid.classList.toggle('hidden', isTypingQuestion);
+            typingPanel.classList.toggle('hidden', !isTypingQuestion);
             grid.innerHTML = '';
 
-            q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-space-dark hover:bg-space-border border-2 border-space-border hover:border-pink-500 text-white font-display text-2xl font-bold py-5 rounded-2xl transition transform active:scale-95 shadow-md";
-                btn.innerText = opt;
-                btn.onclick = () => answerSetoranQuestion(opt);
-                grid.appendChild(btn);
-            });
+            if (isTypingQuestion) {
+                const input = document.getElementById('final-exam-answer-input');
+                input.value = '';
+                setTimeout(() => input.focus(), 0);
+            } else {
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "bg-space-dark hover:bg-space-border border-2 border-space-border hover:border-pink-500 text-white font-display text-2xl font-bold py-5 rounded-2xl transition transform active:scale-95 shadow-md";
+                    btn.innerText = opt;
+                    btn.onclick = () => answerSetoranQuestion(opt);
+                    grid.appendChild(btn);
+                });
+            }
 
             // Start Timer
             state.timeRemaining = state.session.timePerQuestion;
@@ -2636,7 +2669,7 @@
             const state = setoranQuizState;
             const q = state.questions[state.currentIndex];
 
-            if (selected === q.answer) {
+            if (Number(selected) === q.answer) {
                 playSound('correct');
                 state.correctCount++;
             } else {
@@ -2646,6 +2679,28 @@
 
             state.currentIndex++;
             renderSetoranQuestion();
+        }
+
+        function typeFinalExamKey(digit) {
+            const input = document.getElementById('final-exam-answer-input');
+            if (!input || !/^\\d$/.test(String(digit))) return;
+            input.value = `${input.value}${digit}`.slice(0, 3);
+        }
+
+        function clearFinalExamAnswer() {
+            const input = document.getElementById('final-exam-answer-input');
+            if (input) input.value = '';
+        }
+
+        function submitFinalExamTypingAnswer() {
+            const state = setoranQuizState;
+            if (!state || state.session.sessionType !== 'FINAL_EXAM') return;
+            const question = state.questions[state.currentIndex];
+            if (!question || question.answerMode !== 'typing') return;
+            const input = document.getElementById('final-exam-answer-input');
+            const value = input?.value.trim();
+            if (!value || !/^\\d+$/.test(value)) return;
+            answerSetoranQuestion(Number(value));
         }
 
         async function finishSetoranQuiz() {
@@ -3042,7 +3097,7 @@
             const tablesLabel = document.getElementById('teacher-session-tables-label');
             const studentsLabel = document.getElementById('teacher-session-students-label');
             if (help) help.textContent = finalMode
-                ? 'Ujian mencakup ×2–×9 dan hanya siswa yang sudah lulus setoran ×9 yang dapat dipilih. Satu sesi berisi 20 soal pilihan ganda.'
+                ? 'Ujian mencakup ×2–×9 untuk siswa yang lulus ×9: 10 soal pilihan ganda dan 10 soal ketik.'
                 : 'Pilih perkalian dan siswa untuk setoran resmi seperti biasa.';
             if (tablesLabel) tablesLabel.innerHTML = finalMode
                 ? '<i class="fa-solid fa-bullseye"></i> 1. Materi Ujian Akhir (×2 sampai ×9):'
