@@ -143,11 +143,11 @@
 
                 <!-- Login Role Tabs Toggle -->
                 <div class="flex p-1 bg-space-dark border border-space-border rounded-2xl">
-                    <button id="tab-login-btn-student" onclick="switchLoginTab('student')" class="w-1/2 py-2.5 rounded-xl font-display font-bold text-sm transition flex items-center justify-center space-x-2 bg-indigo-600 text-white shadow">
+                    <button type="button" id="tab-login-btn-student" onclick="switchLoginTab('student')" aria-controls="form-login-student" aria-pressed="true" class="w-1/2 py-2.5 rounded-xl font-display font-bold text-sm transition flex items-center justify-center space-x-2 bg-indigo-600 text-white shadow">
                         <i class="fa-solid fa-user-astronaut"></i>
                         <span>Siswa</span>
                     </button>
-                    <button id="tab-login-btn-teacher" onclick="switchLoginTab('teacher')" class="w-1/2 py-2.5 rounded-xl font-display font-bold text-sm transition flex items-center justify-center space-x-2 text-gray-400 hover:text-white">
+                    <button type="button" id="tab-login-btn-teacher" onclick="switchLoginTab('teacher')" aria-controls="form-login-teacher" aria-pressed="false" class="w-1/2 py-2.5 rounded-xl font-display font-bold text-sm transition flex items-center justify-center space-x-2 text-gray-400 hover:text-white">
                         <i class="fa-solid fa-chalkboard-user"></i>
                         <span>Guru</span>
                     </button>
@@ -627,7 +627,7 @@
                 <div>
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-shield-halved"></i> SETORAN RESMI (TOKEN: <span id="quiz-token-display" class="text-white">...</span>)
+                            <i class="fa-solid fa-shield-halved"></i> <span id="quiz-session-title">SETORAN RESMI</span> (TOKEN: <span id="quiz-token-display" class="text-white">...</span>)
                         </span>
                         <span id="quiz-question-number" class="text-sm font-bold text-gray-300">Soal 1 / 20</span>
                     </div>
@@ -757,12 +757,23 @@
                     <!-- Session Configuration Form -->
                     <div class="lg:col-span-7 bg-space-card border border-space-border p-6 rounded-3xl space-y-5">
                         <h3 class="font-display text-xl font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-gear text-indigo-400"></i> Pengaturan Sesi Setoran Resmi
+                            <i class="fa-solid fa-gear text-indigo-400"></i> Pengaturan Sesi
                         </h3>
+
+                        <div class="space-y-2">
+                            <label for="teacher-session-type" class="text-xs font-bold text-indigo-300 flex items-center gap-1">
+                                <i class="fa-solid fa-list-check"></i> Jenis sesi:
+                            </label>
+                            <select id="teacher-session-type" onchange="updateSessionTypeOptions()" class="w-full bg-space-dark border border-space-border rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500">
+                                <option value="OFFICIAL">Setoran Resmi — pilih perkalian dan peserta</option>
+                                <option value="FINAL_EXAM">Ujian Akhir — siswa yang lulus ×9</option>
+                            </select>
+                            <p id="teacher-session-type-help" class="text-xs text-gray-400">Pilih perkalian dan siswa untuk setoran resmi seperti biasa.</p>
+                        </div>
 
                         <!-- 1. Select Perkalian Target -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-indigo-300 flex items-center gap-1">
+                            <label id="teacher-session-tables-label" class="text-xs font-bold text-indigo-300 flex items-center gap-1">
                                 <i class="fa-solid fa-bullseye"></i> 1. Pengaturan Perkalian Yang Diujikan:
                             </label>
                             <div class="grid grid-cols-4 sm:grid-cols-8 gap-2" id="teacher-session-tables">
@@ -773,7 +784,7 @@
                         <!-- 2. Daftar Nama Siswa Yang Akan Setoran -->
                         <div class="space-y-2">
                             <div class="flex justify-between items-center">
-                                <label class="text-xs font-bold text-indigo-300 flex items-center gap-1">
+                                <label id="teacher-session-students-label" class="text-xs font-bold text-indigo-300 flex items-center gap-1">
                                     <i class="fa-solid fa-users-check"></i> 2. Daftar Nama Siswa Yang Akan Setoran:
                                 </label>
                                 <button type="button" onclick="toggleSelectAllStudentsForSetoran()" class="text-[11px] text-cyan-400 hover:underline">
@@ -992,8 +1003,8 @@
             <div id="teacher-content-history" class="teacher-tab-content hidden space-y-4 bg-space-card border border-space-border p-6 rounded-3xl overflow-x-auto">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h3 class="font-display text-xl font-bold text-white">Log Riwayat Setoran Resmi Siswa</h3>
-                        <p class="text-xs text-gray-400">Catatan lengkap pengerjaan setoran berbasis token.</p>
+                        <h3 class="font-display text-xl font-bold text-white">Log Setoran & Ujian Siswa</h3>
+                        <p class="text-xs text-gray-400">Catatan pengerjaan sesi dengan token, termasuk Ujian Akhir.</p>
                     </div>
                 </div>
 
@@ -1001,6 +1012,7 @@
                     <thead class="bg-space-dark text-gray-400 font-semibold uppercase text-[10px] tracking-wider border-b border-space-border">
                         <tr>
                             <th class="p-3">Waktu</th>
+                            <th class="p-3">Jenis Sesi</th>
                             <th class="p-3">Nama Siswa</th>
                             <th class="p-3">Token Sesi</th>
                             <th class="p-3">Perkalian</th>
@@ -1189,8 +1201,8 @@
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </div>
                     <div>
-                        <h3 class="font-display text-lg font-bold text-white">Riwayat Misi Setoran</h3>
-                        <p class="text-xs text-gray-400">Catatan pengerjaan setoran resmi untuk: <strong id="history-student-name" class="text-indigo-300">Siswa</strong></p>
+                    <h3 class="font-display text-lg font-bold text-white">Riwayat Setoran & Ujian</h3>
+                        <p class="text-xs text-gray-400">Catatan pengerjaan untuk: <strong id="history-student-name" class="text-indigo-300">Siswa</strong></p>
                     </div>
                 </div>
                 <button onclick="closeModal('modal-student-history')" class="text-gray-400 hover:text-white text-xl">
@@ -1204,6 +1216,7 @@
                     <thead class="bg-space-dark text-gray-400 font-semibold uppercase text-[10px] tracking-wider sticky top-0">
                         <tr>
                             <th class="p-3">Waktu</th>
+                            <th class="p-3">Jenis Sesi</th>
                             <th class="p-3">Token Sesi</th>
                             <th class="p-3">Perkalian</th>
                             <th class="p-3">Skor</th>
@@ -1289,6 +1302,7 @@
         let realtimeRefreshBusy = false;
         let dailyPracticeResetTimer = null;
         let activeTeacherTab = 'tab-session';
+        let selectedTeacherSessionType = 'OFFICIAL';
 
         // Empty account state; school accounts are loaded from the Jelajah database.
         let appState = {
@@ -1296,6 +1310,7 @@
             currentStudentId: null,
             sessions: [],
             setoranResults: [],
+            finalExamResults: [],
             practiceUpdatedAtByStudent: {},
             practiceFactStats: [],
             teacherProfile: { schoolName: '', schoolCode: '', teacherInviteCode: '', teacherName: '', teacherUsername: '', className: '', academicYear: '' },
@@ -1320,6 +1335,7 @@
                 academicYear: '',
                 ...(appState.teacherProfile || {})
             };
+            appState.finalExamResults ||= [];
             updateTeacherLoginUsernameHint();
         }
         function saveState() {
@@ -1470,6 +1486,17 @@
             };
         }
 
+        function mapFinalExamResultRow(row) {
+            return {
+                id: row.id, studentId: row.student_id,
+                studentName: row.jelajah_students?.full_name || row.studentName || 'Siswa',
+                sessionToken: row.session_token, tables: [2,3,4,5,6,7,8,9],
+                score: row.score, correctCount: row.correct_count, wrongCount: row.wrong_count,
+                totalQuestions: row.total_questions, passed: row.passed,
+                timestamp: new Date(row.completed_at).toLocaleString('id-ID')
+            };
+        }
+
         async function loadTeacherWorkspace() {
             if (!supabaseClient || !supabaseUser) throw new Error('Koneksi Supabase belum siap.');
             const { data: teacher, error: teacherError } = await supabaseClient.from('jelajah_teachers')
@@ -1478,18 +1505,20 @@
             currentTeacherDbId = teacher.id;
             currentTeacherSchoolId = teacher.school_id;
 
-            const [{ data: school, error: schoolError }, { data: teacherInvite, error: teacherInviteError }, studentsRes, sessionsRes, resultsRes] = await Promise.all([
+            const [{ data: school, error: schoolError }, { data: teacherInvite, error: teacherInviteError }, studentsRes, sessionsRes, resultsRes, finalResultsRes] = await Promise.all([
                 supabaseClient.from('jelajah_schools').select('id,name,school_code,login_code').eq('id', teacher.school_id).single(),
                 supabaseClient.from('jelajah_teacher_invites').select('invite_code').eq('school_id', teacher.school_id).single(),
                 supabaseClient.from('jelajah_students').select('*').eq('teacher_id', teacher.id).order('full_name'),
                 supabaseClient.from('jelajah_sessions').select('*').eq('teacher_id', teacher.id).order('created_at', { ascending: false }),
-                supabaseClient.from('jelajah_submission_results').select('*').order('completed_at', { ascending: false })
+                supabaseClient.from('jelajah_submission_results').select('*').order('completed_at', { ascending: false }),
+                supabaseClient.from('jelajah_final_exam_results').select('*').order('completed_at', { ascending: false })
             ]);
             if (schoolError) throw schoolError;
             if (teacherInviteError) throw teacherInviteError;
             if (studentsRes.error) throw studentsRes.error;
             if (sessionsRes.error) throw sessionsRes.error;
             if (resultsRes.error) throw resultsRes.error;
+            if (finalResultsRes.error) throw finalResultsRes.error;
 
             const students = studentsRes.data || [];
             const sessions = sessionsRes.data || [];
@@ -1515,6 +1544,12 @@
             const activeStudents = students.filter(s => s.is_active);
             const activeStudentIds = new Set(activeStudents.map(s => s.id));
             const nameById = Object.fromEntries(students.map(s => [s.id, s.full_name]));
+            const finalExamRows = finalResultsRes.data || [];
+            const finalExamStateByStudent = {};
+            finalExamRows.forEach(row => {
+                if (!finalExamStateByStudent[row.student_id]) finalExamStateByStudent[row.student_id] = { passed: false, attempted: true };
+                if (row.passed) finalExamStateByStudent[row.student_id].passed = true;
+            });
 
             appState.teacherProfile = {
                 schoolName: school.name || teacher.school_name || '',
@@ -1527,16 +1562,22 @@
             };
             appState.students = activeStudents.map(s => ({
                 id: s.id, authUserId: s.auth_user_id, name: s.full_name, username: s.username,
-                grade: s.grade, checkpoints: progressByStudent[s.id] || emptyCheckpointMap()
+                grade: s.grade, checkpoints: progressByStudent[s.id] || emptyCheckpointMap(),
+                finalExamPassed: Boolean(finalExamStateByStudent[s.id]?.passed),
+                finalExamAttempted: Boolean(finalExamStateByStudent[s.id]?.attempted)
             }));
             appState.sessions = sessions.map(s => ({
                 id: s.id, token: s.token, tables: s.multiplication_tables,
+                sessionType: s.session_type || 'OFFICIAL',
                 targetStudentIds: participantsBySession[s.id] || [],
                 timePerQuestion: s.time_per_question, passThresholdPercentage: s.pass_threshold,
                 totalQuestions: s.total_questions, active: s.is_active
             }));
             appState.setoranResults = (resultsRes.data || []).map(row => ({
                 ...mapResultRow(row), studentName: nameById[row.student_id] || 'Siswa'
+            }));
+            appState.finalExamResults = finalExamRows.map(row => ({
+                ...mapFinalExamResultRow(row), studentName: nameById[row.student_id] || 'Siswa'
             }));
             appState.practiceUpdatedAtByStudent = Object.fromEntries((practiceRes.data || []).map(row => [row.student_id, row.updated_at]));
             appState.practiceFactStats = (practiceFactsRes.data || []).filter(row => activeStudentIds.has(row.student_id));
@@ -1555,19 +1596,23 @@
                 .select('id,login_code').eq('id', student.school_id).single();
             if (schoolError) throw schoolError;
 
-            const [progressRes, resultsRes, practiceRes, sessionsRes, practiceFactsRes] = await Promise.all([
+            const [progressRes, resultsRes, practiceRes, sessionsRes, practiceFactsRes, finalResultsRes] = await Promise.all([
                 supabaseClient.from('jelajah_student_progress').select('*').eq('student_id', student.id),
                 supabaseClient.from('jelajah_submission_results').select('*').eq('student_id', student.id).order('completed_at', { ascending: false }),
                 supabaseClient.from('jelajah_practice_stats').select('*').eq('student_id', student.id).maybeSingle(),
                 supabaseClient.from('jelajah_sessions').select('*').eq('is_active', true).order('created_at', { ascending: false }),
-                supabaseClient.from('jelajah_practice_fact_stats').select('*').eq('student_id', student.id)
+                supabaseClient.from('jelajah_practice_fact_stats').select('*').eq('student_id', student.id),
+                supabaseClient.from('jelajah_final_exam_results').select('*').eq('student_id', student.id).order('completed_at', { ascending: false })
             ]);
-            for (const result of [progressRes, resultsRes, practiceRes, sessionsRes, practiceFactsRes]) if (result.error) throw result.error;
+            for (const result of [progressRes, resultsRes, practiceRes, sessionsRes, practiceFactsRes, finalResultsRes]) if (result.error) throw result.error;
             const checkpoints = emptyCheckpointMap();
             (progressRes.data || []).forEach(row => { checkpoints[row.multiplication_table] = row.status; });
+            const finalExamRows = finalResultsRes.data || [];
+            const finalExamPassed = finalExamRows.some(row => row.passed);
             appState.students = [{
                 id: student.id, authUserId: student.auth_user_id, name: student.full_name,
-                username: student.username, schoolCode: school.login_code, grade: student.grade, checkpoints
+                username: student.username, schoolCode: school.login_code, grade: student.grade, checkpoints,
+                finalExamPassed, finalExamAttempted: finalExamRows.length > 0
             }];
             appState.currentStudentId = student.id;
             appState.sessions = (sessionsRes.data || []).map(s => ({
@@ -1576,6 +1621,7 @@
                 totalQuestions: s.total_questions, active: s.is_active
             }));
             appState.setoranResults = (resultsRes.data || []).map(mapResultRow);
+            appState.finalExamResults = finalExamRows.map(mapFinalExamResultRow);
             appState.totalPracticeQuestionsAnswered = practiceRes.data?.questions_answered || 0;
             appState.practiceFactStats = practiceFactsRes.data || [];
             practiceState.weakFactStats = Object.fromEntries(appState.practiceFactStats.map(row => [`${row.multiplication_table}x${row.factor}`, row]));
@@ -1605,6 +1651,7 @@
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_students', filter: `teacher_id=eq.${supabaseUser.id}` }, refresh)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_sessions', filter: `teacher_id=eq.${supabaseUser.id}` }, refresh)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_submission_results' }, refresh)
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_final_exam_results' }, refresh)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_student_progress' }, refresh)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_practice_stats' }, refresh)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_practice_fact_stats' }, refresh)
@@ -1887,6 +1934,22 @@
                 `;
                 grid.appendChild(card);
             }
+
+            const finalExamPassed = Boolean(student.finalExamPassed);
+            const finalExamAttempted = Boolean(student.finalExamAttempted);
+            const finishStatus = finalExamPassed ? '🟢 LULUS' : (finalExamAttempted ? '🔴 BELUM LULUS' : (student.checkpoints[9] === 'LULUS' ? '⚪ BELUM UJIAN' : '🔒 LULUSKAN ×9 DULU'));
+            const finalExamCard = document.createElement('div');
+            finalExamCard.className = `rounded-2xl border p-4 flex flex-col items-center text-center space-y-3 relative transition ${finalExamPassed ? 'border-emerald-500/50 bg-space-card shadow-lg shadow-emerald-950/30' : 'border-space-border bg-space-card/40 opacity-80'}`;
+            finalExamCard.innerHTML = `
+                <div class="w-16 h-16 rounded-full border-2 ${finalExamPassed ? 'border-emerald-400 text-emerald-200' : 'border-slate-600 text-slate-300'} flex items-center justify-center text-2xl shadow-md" style="background-color:#111827;background-image:repeating-conic-gradient(#f8fafc 0% 25%,#111827 0% 50%);background-size:16px 16px" aria-label="Bendera kotak-kotak finish">
+                    <i class="fa-solid fa-flag-checkered drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"></i>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-white text-base">Checkpoint Akhir</h4>
+                    <div class="mt-1"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${finalExamPassed ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-slate-700/60 text-slate-300 border-slate-600'}">${finishStatus}</span></div>
+                    <p class="mt-1 text-[10px] text-gray-400">Ujian Akhir ×2–×9</p>
+                </div>`;
+            grid.appendChild(finalExamCard);
         }
 
         // =================================================================
@@ -2455,10 +2518,19 @@
                     .select('student_id').eq('session_id', data.id).eq('student_id', currentStudentDbId).maybeSingle();
                 if (participantError) throw participantError;
                 if (!participant) throw new Error('Kamu tidak terdaftar sebagai peserta sesi ini.');
+                const sessionType = data.session_type || 'OFFICIAL';
+                if (sessionType === 'FINAL_EXAM') {
+                    const student = getCurrentStudent();
+                    if (student.checkpoints?.[9] !== 'LULUS') throw new Error('Ujian Akhir dapat diikuti setelah lulus setoran perkalian ×9.');
+                    const { data: priorResult, error: priorResultError } = await supabaseClient.from('jelajah_final_exam_results')
+                        .select('id').eq('session_id', data.id).eq('student_id', currentStudentDbId).maybeSingle();
+                    if (priorResultError) throw priorResultError;
+                    if (priorResult) throw new Error('Kamu sudah mengerjakan Ujian Akhir pada sesi ini. Minta token sesi baru kepada guru jika perlu mengulang.');
+                }
                 session = {
                     id: data.id, token: data.token, tables: data.multiplication_tables,
                     timePerQuestion: data.time_per_question, passThresholdPercentage: data.pass_threshold,
-                    totalQuestions: data.total_questions, active: data.is_active
+                    totalQuestions: data.total_questions, active: data.is_active, sessionType
                 };
             } catch (error) {
                 errorEl.innerText = error.message || 'Sesi belum dapat dimulai.';
@@ -2473,8 +2545,14 @@
             practiceState.usedQuestions.clear();
             practiceState.lastQuestionKey = null;
             const questions = [];
-            for (let i = 0; i < session.totalQuestions; i++) {
-                questions.push(generateMathQuestion(session.tables));
+            if (session.sessionType === 'FINAL_EXAM') {
+                const examTables = [2,3,4,5,6,7,8,9];
+                const examTablePlan = examTables.flatMap(table => [table, table]);
+                examTablePlan.push(2,3,4,5);
+                examTablePlan.sort(() => Math.random() - 0.5);
+                examTablePlan.forEach(table => questions.push(generateMathQuestion([table])));
+            } else {
+                for (let i = 0; i < session.totalQuestions; i++) questions.push(generateMathQuestion(session.tables));
             }
 
             setoranQuizState = {
@@ -2489,6 +2567,7 @@
 
             switchView('setoran-official');
             document.getElementById('quiz-token-display').innerText = session.token;
+            document.getElementById('quiz-session-title').innerText = session.sessionType === 'FINAL_EXAM' ? 'UJIAN AKHIR ×2–×9' : 'SETORAN RESMI';
             renderSetoranQuestion();
         }
 
@@ -2579,11 +2658,11 @@
             let savedResult = null;
             try {
                 if (!supabaseClient || !currentStudentDbId) throw new Error('Sesi siswa tidak terhubung ke Supabase.');
-                const { data, error } = await supabaseClient.rpc('jelajah_submit_result', {
-                    p_session_id: state.session.id,
-                    p_correct_count: state.correctCount,
-                    p_wrong_count: state.wrongCount
-                });
+                const isFinalExam = state.session.sessionType === 'FINAL_EXAM';
+                const { data, error } = await supabaseClient.rpc(
+                    isFinalExam ? 'jelajah_submit_final_exam_result' : 'jelajah_submit_result',
+                    { p_session_id: state.session.id, p_correct_count: state.correctCount, p_wrong_count: state.wrongCount }
+                );
                 if (error) throw error;
                 savedResult = Array.isArray(data) ? data[0] : data;
                 if (!savedResult) throw new Error('Hasil setoran tidak dikembalikan oleh database.');
@@ -2611,19 +2690,24 @@
                 timestamp: new Date().toLocaleString('id-ID')
             };
 
-            appState.setoranResults.unshift(newResult);
-
-            // Update Checkpoints if Passed!
-            if (passed) {
-                state.session.tables.forEach(t => {
-                    student.checkpoints[t] = 'LULUS';
-                });
+            if (state.session.sessionType === 'FINAL_EXAM') {
+                newResult.tables = [2,3,4,5,6,7,8,9];
+                appState.finalExamResults.unshift(newResult);
+                if (passed) {
+                    student.finalExamPassed = true;
+                    student.finalExamAttempted = true;
+                } else {
+                    student.finalExamAttempted = true;
+                }
             } else {
-                state.session.tables.forEach(t => {
-                    if (student.checkpoints[t] !== 'LULUS') {
-                        student.checkpoints[t] = 'BELUM_LULUS';
-                    }
-                });
+                appState.setoranResults.unshift(newResult);
+                if (passed) {
+                    state.session.tables.forEach(t => { student.checkpoints[t] = 'LULUS'; });
+                } else {
+                    state.session.tables.forEach(t => {
+                        if (student.checkpoints[t] !== 'LULUS') student.checkpoints[t] = 'BELUM_LULUS';
+                    });
+                }
             }
 
             try { await loadStudentWorkspace(); }
@@ -2645,16 +2729,20 @@
                 playSound('fanfare');
                 iconBox.className = "w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl shadow-2xl animate-float bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500/50";
                 iconBox.innerHTML = `<i class="fa-solid fa-rocket"></i>`;
-                titleEl.innerText = "SELAMAT! MISI SUKSES! 🎉";
-                subtitleEl.innerText = `Kamu berhasil meluluskan setoran perkalian ini!`;
-                statusBox.innerHTML = `🚀 <strong>Checkpoint Terbuka:</strong> Perkalian ${state.session.tables.map(t=>'×'+t).join(', ')} resmi lulus!`;
+                titleEl.innerText = state.session.sessionType === 'FINAL_EXAM' ? "SELAMAT! UJIAN AKHIR LULUS! 🏁" : "SELAMAT! MISI SUKSES! 🎉";
+                subtitleEl.innerText = state.session.sessionType === 'FINAL_EXAM' ? 'Kamu menuntaskan Ujian Akhir perkalian ×2 sampai ×9!' : 'Kamu berhasil meluluskan setoran perkalian ini!';
+                statusBox.innerHTML = state.session.sessionType === 'FINAL_EXAM'
+                    ? '🏁 <strong>Checkpoint Finish Terbuka:</strong> Ujian Akhir perkalian ×2–×9 resmi lulus!'
+                    : `🚀 <strong>Checkpoint Terbuka:</strong> Perkalian ${state.session.tables.map(t=>'×'+t).join(', ')} resmi lulus!`;
                 statusBox.className = "p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-sm";
             } else {
                 iconBox.className = "w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl shadow-2xl animate-float bg-rose-500/20 text-rose-400 border-2 border-rose-500/50";
                 iconBox.innerHTML = `<i class="fa-solid fa-user-astronaut"></i>`;
-                titleEl.innerText = "BELUM LULUS, JANGAN MENYERAH! 💪";
+                titleEl.innerText = state.session.sessionType === 'FINAL_EXAM' ? "BELUM LULUS, COBA LAGI! 💪" : "BELUM LULUS, JANGAN MENYERAH! 💪";
                 subtitleEl.innerText = `Syarat lulus adalah minimal ${state.session.passThresholdPercentage}%. Latih lagi kemampuanmu!`;
-                statusBox.innerHTML = `⚠️ Checkpoint perkalian ${state.session.tables.map(t=>'×'+t).join(', ')} belum terbuka.`;
+                statusBox.innerHTML = state.session.sessionType === 'FINAL_EXAM'
+                    ? '🏁 Checkpoint Finish belum terbuka. Berlatih dan minta token ujian baru kepada guru untuk mencoba lagi.'
+                    : `⚠️ Checkpoint perkalian ${state.session.tables.map(t=>'×'+t).join(', ')} belum terbuka.`;
                 statusBox.className = "p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-200 text-sm";
             }
         }
@@ -2874,6 +2962,7 @@
             const activeSession = appState.sessions.find(s => s.active);
             const endSessionButton = document.getElementById('end-active-session-button');
             if (endSessionButton) endSessionButton.classList.toggle('hidden', !activeSession);
+            if (endSessionButton && activeSession) endSessionButton.innerHTML = `<i class="fa-solid fa-circle-stop mr-2"></i>Akhiri Sesi ${activeSession.sessionType === 'FINAL_EXAM' ? 'Ujian Akhir' : 'Setoran Resmi'}`;
             if (activeSession) {
                 document.getElementById('active-token-banner').innerText = activeSession.token;
                 
@@ -2884,6 +2973,7 @@
                 }
 
                 document.getElementById('active-session-info-details').innerHTML = `
+                    <p>🧭 Jenis Sesi: <strong>${activeSession.sessionType === 'FINAL_EXAM' ? 'Ujian Akhir' : 'Setoran Resmi'}</strong></p>
                     <p>🎯 Target Perkalian: <strong>${activeSession.tables.map(t=>'×'+t).join(', ')}</strong></p>
                     <p>👥 Peserta: <strong>${studentNames}</strong></p>
                     <p>⏱️ Durasi Per Soal: <strong>${activeSession.timePerQuestion} Detik</strong></p>
@@ -2891,7 +2981,7 @@
                 `;
             } else {
                 document.getElementById('active-token-banner').innerText = '- BELUM ADA -';
-                document.getElementById('active-session-info-details').innerHTML = '<p class="text-gray-400">Tidak ada sesi setoran resmi yang sedang dibuka.</p>';
+                document.getElementById('active-session-info-details').innerHTML = '<p class="text-gray-400">Tidak ada sesi yang sedang dibuka.</p>';
             }
             renderDailyPracticeToday();
             renderTeacherPracticeDifficulty();
@@ -2900,9 +2990,10 @@
             const sessTableContainer = document.getElementById('teacher-session-tables');
             sessTableContainer.innerHTML = '';
             for (let i = 2; i <= 9; i++) {
+                const finalMode = selectedTeacherSessionType === 'FINAL_EXAM';
                 sessTableContainer.innerHTML += `
                     <label class="border border-space-border p-2 rounded-xl flex items-center justify-center space-x-1 cursor-pointer bg-space-dark text-xs font-bold text-white hover:border-indigo-500">
-                        <input type="checkbox" value="${i}" ${i<=3?'checked':''} class="teacher-sess-tbl-chk text-indigo-600 focus:ring-0">
+                        <input type="checkbox" value="${i}" ${finalMode || i<=3?'checked':''} ${finalMode?'disabled':''} class="teacher-sess-tbl-chk text-indigo-600 focus:ring-0">
                         <span>×${i}</span>
                     </label>
                 `;
@@ -2912,13 +3003,19 @@
             const sessStudentsContainer = document.getElementById('teacher-session-students-list');
             sessStudentsContainer.innerHTML = '';
             appState.students.forEach(s => {
+                const eligible = s.checkpoints?.[9] === 'LULUS';
+                const finalMode = selectedTeacherSessionType === 'FINAL_EXAM';
                 sessStudentsContainer.innerHTML += `
                     <label class="flex items-center space-x-2 text-xs font-semibold text-gray-200 cursor-pointer hover:text-white">
-                        <input type="checkbox" value="${s.id}" checked class="teacher-sess-student-chk text-indigo-600 rounded focus:ring-0">
-                        <span>${s.name} (${s.grade})</span>
+                        <input type="checkbox" value="${s.id}" ${!finalMode || eligible?'checked':''} ${finalMode && !eligible?'disabled':''} class="teacher-sess-student-chk text-indigo-600 rounded focus:ring-0">
+                        <span>${s.name} (${s.grade})${finalMode ? (eligible ? ' — lulus ×9' : ' — belum lulus ×9') : ''}</span>
                     </label>
                 `;
             });
+
+            const sessionTypeSelect = document.getElementById('teacher-session-type');
+            if (sessionTypeSelect) sessionTypeSelect.value = selectedTeacherSessionType;
+            updateSessionTypeOptions();
 
             // Render Students Table
             renderStudentTable();
@@ -2930,9 +3027,46 @@
         }
 
         function toggleSelectAllStudentsForSetoran() {
-            const chks = document.querySelectorAll('.teacher-sess-student-chk');
+            const chks = Array.from(document.querySelectorAll('.teacher-sess-student-chk')).filter(chk => !chk.disabled);
             const allChecked = Array.from(chks).every(c => c.checked);
             chks.forEach(c => c.checked = !allChecked);
+        }
+
+        function updateSessionTypeOptions() {
+            const select = document.getElementById('teacher-session-type');
+            if (!select) return;
+            const previousType = selectedTeacherSessionType;
+            selectedTeacherSessionType = select.value === 'FINAL_EXAM' ? 'FINAL_EXAM' : 'OFFICIAL';
+            const finalMode = selectedTeacherSessionType === 'FINAL_EXAM';
+            const help = document.getElementById('teacher-session-type-help');
+            const tablesLabel = document.getElementById('teacher-session-tables-label');
+            const studentsLabel = document.getElementById('teacher-session-students-label');
+            if (help) help.textContent = finalMode
+                ? 'Ujian mencakup ×2–×9 dan hanya siswa yang sudah lulus setoran ×9 yang dapat dipilih. Satu sesi berisi 20 soal pilihan ganda.'
+                : 'Pilih perkalian dan siswa untuk setoran resmi seperti biasa.';
+            if (tablesLabel) tablesLabel.innerHTML = finalMode
+                ? '<i class="fa-solid fa-bullseye"></i> 1. Materi Ujian Akhir (×2 sampai ×9):'
+                : '<i class="fa-solid fa-bullseye"></i> 1. Pengaturan Perkalian Yang Diujikan:';
+            if (studentsLabel) studentsLabel.innerHTML = finalMode
+                ? '<i class="fa-solid fa-users-check"></i> 2. Pilih Siswa Yang Sudah Lulus ×9:'
+                : '<i class="fa-solid fa-users-check"></i> 2. Daftar Nama Siswa Yang Akan Setoran:';
+            document.querySelectorAll('.teacher-sess-tbl-chk').forEach(chk => {
+                chk.disabled = finalMode;
+                if (finalMode) chk.checked = true;
+                else if (previousType === 'FINAL_EXAM') chk.checked = Number(chk.value) <= 3;
+            });
+            document.querySelectorAll('.teacher-sess-student-chk').forEach(chk => {
+                const student = appState.students.find(s => s.id === chk.value);
+                const eligible = student?.checkpoints?.[9] === 'LULUS';
+                chk.disabled = finalMode && !eligible;
+                chk.checked = finalMode ? eligible : true;
+                const label = chk.closest('label')?.querySelector('span');
+                if (label) label.textContent = finalMode
+                    ? `${student?.name || ''} (${student?.grade || ''})${eligible ? ' — lulus ×9' : ' — belum lulus ×9'}`
+                    : `${student?.name || ''} (${student?.grade || ''})`;
+            });
+            const buttonText = document.querySelector('#teacher-content-session button[onclick="generateNewSessionToken()"] span');
+            if (buttonText) buttonText.textContent = finalMode ? 'BUKA SESI UJIAN AKHIR (HASILKAN TOKEN)' : 'BUKA SESI SETORAN RESMI (HASILKAN TOKEN)';
         }
 
         function updateThresholdDisplay(value) {
@@ -2949,7 +3083,8 @@
                 alert('Guru belum terhubung ke proyek Supabase Jelajah.');
                 return;
             }
-            if (!confirm(`Akhiri sesi setoran dengan token ${activeSession.token}? Siswa tidak bisa mengirim setoran baru dengan token ini.`)) return;
+            const sessionLabel = activeSession.sessionType === 'FINAL_EXAM' ? 'Ujian Akhir' : 'Setoran Resmi';
+            if (!confirm(`Akhiri sesi ${sessionLabel} dengan token ${activeSession.token}? Siswa tidak bisa mengirim jawaban baru dengan token ini.`)) return;
             try {
                 const { error } = await supabaseClient.from('jelajah_sessions')
                     .update({ is_active: false })
@@ -2959,7 +3094,7 @@
                 if (error) throw error;
                 await loadTeacherWorkspace();
                 renderTeacherDashboard();
-                alert('Sesi setoran telah diakhiri.');
+                alert(`Sesi ${sessionLabel} telah diakhiri.`);
             } catch (error) {
                 console.error('Gagal mengakhiri sesi setoran:', error);
                 alert(`Sesi belum berhasil diakhiri: ${error.message || error}`);
@@ -2971,14 +3106,15 @@
                 alert('Guru belum terhubung ke proyek Supabase Jelajah.');
                 return;
             }
+            const sessionType = selectedTeacherSessionType;
             const tblChks = document.querySelectorAll('.teacher-sess-tbl-chk:checked');
-            const tables = Array.from(tblChks).map(c => parseInt(c.value));
+            const tables = sessionType === 'FINAL_EXAM' ? [2,3,4,5,6,7,8,9] : Array.from(tblChks).map(c => parseInt(c.value));
             if (tables.length === 0) {
                 alert("Pilih minimal satu tabel perkalian!");
                 return;
             }
 
-            const stdChks = document.querySelectorAll('.teacher-sess-student-chk:checked');
+            const stdChks = document.querySelectorAll('.teacher-sess-student-chk:checked:not(:disabled)');
             const targetStudentIds = Array.from(stdChks).map(c => c.value);
             if (targetStudentIds.length === 0) {
                 alert("Pilih minimal satu siswa yang akan mengikuti setoran!");
@@ -3003,6 +3139,7 @@
                     const { data, error } = await supabaseClient.from('jelajah_sessions').insert({
                         teacher_id: currentTeacherDbId,
                         school_id: currentTeacherSchoolId,
+                        session_type: sessionType,
                         token: randomCode,
                         multiplication_tables: tables,
                         time_per_question: timeVal,
@@ -3032,7 +3169,7 @@
                 await loadTeacherWorkspace();
                 renderTeacherDashboard();
                 playSound('fanfare');
-                alert(`Sesi Setoran Resmi berhasil dibuka!\nTOKEN: ${randomCode}`);
+                alert(`${sessionType === 'FINAL_EXAM' ? 'Sesi Ujian Akhir' : 'Sesi Setoran Resmi'} berhasil dibuka!\nTOKEN: ${randomCode}`);
             } catch (error) {
                 console.error('Gagal membuka sesi setoran:', error);
                 alert(`Sesi belum berhasil disimpan: ${error.message || error}`);
@@ -3074,9 +3211,18 @@
                 }
 
                 const progressPercent = Math.round((unlockedCount / 8) * 100);
-                const rocketRow = highestPassedTable === null ? 8 : 9 - highestPassedTable;
+                const finalExamPassed = Boolean(student.finalExamPassed);
+                const finishStatus = finalExamPassed ? 'Lulus' : (student.finalExamAttempted ? 'Belum lulus' : (student.checkpoints[9] === 'LULUS' ? 'Belum ujian' : 'Luluskan ×9 dulu'));
+                const finishNodeClass = finalExamPassed ? 'border-emerald-400 text-emerald-200' : 'border-slate-600 text-slate-300';
+                const finishNodeStyle = 'background-color:#111827;background-image:repeating-conic-gradient(#f8fafc 0% 25%,#111827 0% 50%);background-size:12px 12px';
+                const finishRowHTML = `
+                    <div class="relative flex items-center pl-[88px]" style="height:52px">
+                        <span class="absolute left-[38px] z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 ${finishNodeClass} text-sm shadow-md" style="${finishNodeStyle}" aria-label="Checkpoint akhir, bendera kotak-kotak, status ${finishStatus}"><i class="fa-solid fa-flag-checkered drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"></i></span>
+                        <span class="text-[10px] font-bold ${finalExamPassed ? 'text-emerald-300' : 'text-slate-400'}">${finishStatus}</span>
+                    </div>`;
+                const rocketRow = finalExamPassed ? 0 : (highestPassedTable === null ? 9 : 10 - highestPassedTable);
                 const rocketTop = (rocketRow * 52) + 26;
-                const rocketStatus = highestPassedTable === null
+                const rocketStatus = finalExamPassed ? 'Roket tiba di checkpoint finish Ujian Akhir' : highestPassedTable === null
                     ? 'Roket berada di garis start'
                     : `Roket berada di checkpoint perkalian ×${highestPassedTable}`;
 
@@ -3110,11 +3256,12 @@
                     <div class="rounded-2xl border border-space-border bg-gradient-to-b from-indigo-950/50 to-space-card px-3 py-4">
                         <div class="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-indigo-200">
                             <span>Lintasan Roket</span>
-                            <span>×9 di atas · ×2 di bawah</span>
+                            <span>Finish di atas · ×2 di bawah</span>
                         </div>
                         <div class="relative mx-auto max-w-sm">
                             <div class="absolute left-[57px] top-[26px] bottom-[26px] w-1 rounded-full bg-gradient-to-b from-cyan-400 via-indigo-500 to-slate-600 opacity-80"></div>
                             <div class="absolute left-[3px] z-20 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-lg shadow-lg shadow-indigo-500/40 transition-all duration-700" style="top:${rocketTop}px;transform:translateY(-50%)" title="${rocketStatus}" aria-label="${rocketStatus}">🚀</div>
+                            ${finishRowHTML}
                             ${checkpointRowsHTML}
                             <div class="relative flex items-center pl-[88px]" style="height:52px">
                                 <span class="absolute left-[38px] z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-amber-300 bg-amber-400/10 font-display text-[9px] font-extrabold text-amber-200" aria-label="Garis start">MULAI</span>
@@ -3250,7 +3397,11 @@
             const tbody = document.getElementById('setoran-history-body');
             tbody.innerHTML = '';
 
-            appState.setoranResults.forEach(r => {
+            const allResults = [
+                ...appState.finalExamResults.map(r => ({ ...r, sessionLabel: 'Ujian Akhir' })),
+                ...appState.setoranResults.map(r => ({ ...r, sessionLabel: 'Setoran Resmi' }))
+            ];
+            allResults.forEach(r => {
                 const statusBadge = r.passed ?
                     `<span class="bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full">LULUS</span>` :
                     `<span class="bg-rose-500/20 text-rose-300 font-bold px-2 py-0.5 rounded-full">BELUM LULUS</span>`;
@@ -3258,6 +3409,7 @@
                 tbody.innerHTML += `
                     <tr class="hover:bg-space-dark/50">
                         <td class="p-3 text-gray-400">${r.timestamp}</td>
+                        <td class="p-3">${r.sessionLabel}</td>
                         <td class="p-3 font-semibold text-white">${r.studentName}</td>
                         <td class="p-3 font-mono text-yellow-300 font-bold">${r.sessionToken}</td>
                         <td class="p-3">${r.tables.map(t=>'×'+t).join(', ')}</td>
@@ -3287,9 +3439,12 @@
             const tbody = document.getElementById('student-history-table-body');
             tbody.innerHTML = '';
 
-            const results = appState.setoranResults.filter(r => r.studentId === student.id);
+            const results = [
+                ...appState.finalExamResults.filter(r => r.studentId === student.id).map(r => ({ ...r, sessionLabel: 'Ujian Akhir' })),
+                ...appState.setoranResults.filter(r => r.studentId === student.id).map(r => ({ ...r, sessionLabel: 'Setoran Resmi' }))
+            ];
             if (results.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">Belum ada riwayat setoran resmi yang dikerjakan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400">Belum ada setoran atau ujian yang dikerjakan.</td></tr>`;
             } else {
                 results.forEach(r => {
                     const statusBadge = r.passed ?
@@ -3299,6 +3454,7 @@
                     tbody.innerHTML += `
                         <tr class="hover:bg-space-dark/50">
                             <td class="p-3 text-gray-300">${r.timestamp}</td>
+                            <td class="p-3">${r.sessionLabel}</td>
                             <td class="p-3 font-mono text-yellow-300 font-bold">${r.sessionToken}</td>
                             <td class="p-3">${r.tables.map(t=>'×'+t).join(', ')}</td>
                             <td class="p-3 font-bold">${r.score}% (${r.correctCount}/${r.totalQuestions})</td>
@@ -3338,28 +3494,30 @@
             } else switchView('login');
         };
     </script>
+    <script>
+        // Keep the login role tabs responsive even if another app script fails.
+        (() => {
+            const studentForm = document.getElementById('form-login-student');
+            const teacherForm = document.getElementById('form-login-teacher');
+            const studentBtn = document.getElementById('tab-login-btn-student');
+            const teacherBtn = document.getElementById('tab-login-btn-teacher');
+            if (!studentForm || !teacherForm || !studentBtn || !teacherBtn) return;
+
+            const base = 'w-1/2 py-2.5 rounded-xl font-display font-bold text-sm transition flex items-center justify-center space-x-2 ';
+            const showRole = (role) => {
+                const isTeacher = role === 'teacher';
+                studentForm.classList.toggle('hidden', isTeacher);
+                teacherForm.classList.toggle('hidden', !isTeacher);
+                studentBtn.className = base + (isTeacher ? 'text-gray-400 hover:text-white' : 'bg-indigo-600 text-white shadow');
+                teacherBtn.className = base + (isTeacher ? 'bg-purple-600 text-white shadow' : 'text-gray-400 hover:text-white');
+                studentBtn.setAttribute('aria-pressed', String(!isTeacher));
+                teacherBtn.setAttribute('aria-pressed', String(isTeacher));
+            };
+
+            window.switchLoginTab = showRole;
+            studentBtn.addEventListener('click', (event) => { event.preventDefault(); showRole('student'); });
+            teacherBtn.addEventListener('click', (event) => { event.preventDefault(); showRole('teacher'); });
+        })();
+    </script>
 </body>
 </html>
-
-<script>
-(() => {
-  const studentForm = document.getElementById('form-login-student');
-  const teacherForm = document.getElementById('form-login-teacher');
-  const studentBtn = document.getElementById('tab-login-btn-student');
-  const teacherBtn = document.getElementById('tab-login-btn-teacher');
-  if (!studentForm || !teacherForm || !studentBtn || !teacherBtn) return;
-  const base = 'w-1/2 py-2.5 rounded-xl font-display font-bold text-sm transition flex items-center justify-center space-x-2 ';
-  const showRole = (role) => {
-    const isTeacher = role === 'teacher';
-    studentForm.classList.toggle('hidden', isTeacher);
-    teacherForm.classList.toggle('hidden', !isTeacher);
-    studentBtn.className = base + (isTeacher ? 'text-gray-400 hover:text-white' : 'bg-indigo-600 text-white shadow');
-    teacherBtn.className = base + (isTeacher ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 hover:text-white');
-    studentBtn.setAttribute('aria-pressed', String(!isTeacher));
-    teacherBtn.setAttribute('aria-pressed', String(isTeacher));
-  };
-  window.switchLoginTab = showRole;
-  studentBtn.addEventListener('click', (event) => { event.preventDefault(); showRole('student'); });
-  teacherBtn.addEventListener('click', (event) => { event.preventDefault(); showRole('teacher'); });
-})();
-</script>
