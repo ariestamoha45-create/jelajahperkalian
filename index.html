@@ -2089,11 +2089,11 @@
             const reverseFactors = picked.t !== picked.m && Math.random() < 0.5;
 
             // Generate 3 unique wrong options
-            const options = new Set([answer]);
-            while (options.size < 4) {
+            const answerOptions = new Set([answer]);
+            while (answerOptions.size < 4) {
                 const offset = (Math.floor(Math.random() * 5) + 1) * (Math.random() < 0.5 ? 1 : -1);
                 const wrong = answer + offset;
-                if (wrong > 0 && wrong !== answer) options.add(wrong);
+                if (wrong > 0 && wrong !== answer) answerOptions.add(wrong);
             }
 
             return {
@@ -2102,7 +2102,7 @@
                 multiplicationTable: picked.t,
                 factor: picked.m,
                 answer: answer,
-                options: Array.from(options).sort(() => Math.random() - 0.5)
+                options: Array.from(answerOptions).sort(() => Math.random() - 0.5)
             };
         }
 
