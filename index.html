@@ -3340,3 +3340,26 @@
     </script>
 </body>
 </html>
+
+<script>
+(() => {
+  const studentForm = document.getElementById('form-login-student');
+  const teacherForm = document.getElementById('form-login-teacher');
+  const studentBtn = document.getElementById('tab-login-btn-student');
+  const teacherBtn = document.getElementById('tab-login-btn-teacher');
+  if (!studentForm || !teacherForm || !studentBtn || !teacherBtn) return;
+  const base = 'w-1/2 py-2.5 rounded-xl font-display font-bold text-sm transition flex items-center justify-center space-x-2 ';
+  const showRole = (role) => {
+    const isTeacher = role === 'teacher';
+    studentForm.classList.toggle('hidden', isTeacher);
+    teacherForm.classList.toggle('hidden', !isTeacher);
+    studentBtn.className = base + (isTeacher ? 'text-gray-400 hover:text-white' : 'bg-indigo-600 text-white shadow');
+    teacherBtn.className = base + (isTeacher ? 'bg-indigo-600 text-white shadow' : 'text-gray-400 hover:text-white');
+    studentBtn.setAttribute('aria-pressed', String(!isTeacher));
+    teacherBtn.setAttribute('aria-pressed', String(isTeacher));
+  };
+  window.switchLoginTab = showRole;
+  studentBtn.addEventListener('click', (event) => { event.preventDefault(); showRole('student'); });
+  teacherBtn.addEventListener('click', (event) => { event.preventDefault(); showRole('teacher'); });
+})();
+</script>
