@@ -1256,6 +1256,34 @@
         </div>
     </div>
 
+    <div id="modal-reset-progress" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-space-card border border-amber-500/40 rounded-3xl p-6 max-w-lg w-full space-y-5 shadow-2xl">
+            <div class="flex justify-between items-start gap-4 border-b border-space-border pb-3">
+                <div>
+                    <h3 class="font-display text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-rotate-left text-amber-300"></i> Atur Ulang Kemajuan</h3>
+                    <p class="text-sm text-gray-300 mt-1">Siswa: <strong id="reset-progress-student-name" class="text-amber-200">Siswa</strong></p>
+                </div>
+                <button onclick="closeModal('modal-reset-progress')" class="text-gray-400 hover:text-white text-xl" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-2">
+                <label for="reset-progress-target" class="block text-sm font-bold text-indigo-200">Bagian yang diulang:</label>
+                <select id="reset-progress-target" class="w-full bg-space-dark border border-space-border rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400">
+                    <option value="">Pilih bagian kemajuan</option>
+                    <option value="2">Perkalian ×2</option><option value="3">Perkalian ×3</option>
+                    <option value="4">Perkalian ×4</option><option value="5">Perkalian ×5</option>
+                    <option value="6">Perkalian ×6</option><option value="7">Perkalian ×7</option>
+                    <option value="8">Perkalian ×8</option><option value="9">Perkalian ×9</option>
+                    <option value="ALL">Seluruh kemajuan ×2–×9</option>
+                </select>
+            </div>
+            <p class="text-xs text-gray-400 bg-space-dark/70 border border-space-border rounded-xl p-3">Riwayat setoran tetap tersimpan. Setelah reset, siswa perlu mengulang Ujian Akhir agar bendera finish kembali tercatat lulus.</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeModal('modal-reset-progress')" class="bg-space-dark hover:bg-space-border text-gray-200 font-bold px-4 py-2.5 rounded-xl text-sm">Batal</button>
+                <button onclick="resetStudentProgress()" class="bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold px-4 py-2.5 rounded-xl text-sm"><i class="fa-solid fa-rotate-left mr-1"></i> Atur Ulang</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- ================================================================= -->
     <!-- JAVASCRIPT APP LOGIC                                              -->
@@ -1319,9 +1347,11 @@
         let currentTeacherSchoolId = null;
         let teacherRealtimeChannel = null;
         let realtimeRefreshBusy = false;
+        let studentWorkspaceRefreshBusy = false;
         let dailyPracticeResetTimer = null;
         let activeTeacherTab = 'tab-session';
         let selectedTeacherSessionType = 'OFFICIAL';
+        let selectedProgressResetStudentId = null;
 
         // Empty account state; school accounts are loaded from the Jelajah database.
         let appState = {
@@ -1563,9 +1593,11 @@
             const activeStudents = students.filter(s => s.is_active);
             const activeStudentIds = new Set(activeStudents.map(s => s.id));
             const nameById = Object.fromEntries(students.map(s => [s.id, s.full_name]));
-            const finalExamRows = finalResultsRes.data || [];
+            const allFinalExamRows = finalResultsRes.data || [];
+            const resetAtByStudent = Object.fromEntries(students.map(s => [s.id, s.progress_reset_at ? new Date(s.progress_reset_at).getTime() : 0]));
+            const currentFinalExamRows = allFinalExamRows.filter(row => new Date(row.completed_at).getTime() > (resetAtByStudent[row.student_id] || 0));
             const finalExamStateByStudent = {};
-            finalExamRows.forEach(row => {
+            currentFinalExamRows.forEach(row => {
                 if (!finalExamStateByStudent[row.student_id]) finalExamStateByStudent[row.student_id] = { passed: false, attempted: true };
                 if (row.passed) finalExamStateByStudent[row.student_id].passed = true;
             });
@@ -1582,6 +1614,7 @@
             appState.students = activeStudents.map(s => ({
                 id: s.id, authUserId: s.auth_user_id, name: s.full_name, username: s.username,
                 grade: s.grade, checkpoints: progressByStudent[s.id] || emptyCheckpointMap(),
+                progressResetAt: s.progress_reset_at || null,
                 finalExamPassed: Boolean(finalExamStateByStudent[s.id]?.passed),
                 finalExamAttempted: Boolean(finalExamStateByStudent[s.id]?.attempted)
             }));
@@ -1595,7 +1628,7 @@
             appState.setoranResults = (resultsRes.data || []).map(row => ({
                 ...mapResultRow(row), studentName: nameById[row.student_id] || 'Siswa'
             }));
-            appState.finalExamResults = finalExamRows.map(row => ({
+            appState.finalExamResults = allFinalExamRows.map(row => ({
                 ...mapFinalExamResultRow(row), studentName: nameById[row.student_id] || 'Siswa'
             }));
             appState.practiceUpdatedAtByStudent = Object.fromEntries((practiceRes.data || []).map(row => [row.student_id, row.updated_at]));
@@ -1626,11 +1659,14 @@
             for (const result of [progressRes, resultsRes, practiceRes, sessionsRes, practiceFactsRes, finalResultsRes]) if (result.error) throw result.error;
             const checkpoints = emptyCheckpointMap();
             (progressRes.data || []).forEach(row => { checkpoints[row.multiplication_table] = row.status; });
-            const finalExamRows = finalResultsRes.data || [];
+            const allFinalExamRows = finalResultsRes.data || [];
+            const resetAt = student.progress_reset_at ? new Date(student.progress_reset_at).getTime() : 0;
+            const finalExamRows = allFinalExamRows.filter(row => new Date(row.completed_at).getTime() > resetAt);
             const finalExamPassed = finalExamRows.some(row => row.passed);
             appState.students = [{
                 id: student.id, authUserId: student.auth_user_id, name: student.full_name,
                 username: student.username, schoolCode: school.login_code, grade: student.grade, checkpoints,
+                progressResetAt: student.progress_reset_at || null,
                 finalExamPassed, finalExamAttempted: finalExamRows.length > 0
             }];
             appState.currentStudentId = student.id;
@@ -1640,7 +1676,7 @@
                 totalQuestions: s.total_questions, active: s.is_active
             }));
             appState.setoranResults = (resultsRes.data || []).map(mapResultRow);
-            appState.finalExamResults = finalExamRows.map(mapFinalExamResultRow);
+            appState.finalExamResults = allFinalExamRows.map(mapFinalExamResultRow);
             appState.totalPracticeQuestionsAnswered = practiceRes.data?.questions_answered || 0;
             appState.practiceFactStats = practiceFactsRes.data || [];
             practiceState.weakFactStats = Object.fromEntries(appState.practiceFactStats.map(row => [`${row.multiplication_table}x${row.factor}`, row]));
@@ -1845,9 +1881,23 @@
                     }));
                 } catch (error) { console.error('Pembaruan sesi siswa gagal:', error); }
             };
+            const refreshStudentProgress = async () => {
+                if (studentWorkspaceRefreshBusy || accountRole !== 'student') return;
+                studentWorkspaceRefreshBusy = true;
+                try {
+                    await loadStudentWorkspace();
+                    if (!document.getElementById('view-student-home')?.classList.contains('hidden')) renderStudentHome();
+                } catch (error) {
+                    console.error('Pembaruan kemajuan siswa gagal:', error);
+                } finally {
+                    studentWorkspaceRefreshBusy = false;
+                }
+            };
             teacherRealtimeChannel = supabaseClient.channel(`jelajah-student-${supabaseUser.id}`)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_sessions' }, refreshSessions)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_session_participants' }, refreshSessions)
+                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'jelajah_students', filter: `id=eq.${currentStudentDbId}` }, refreshStudentProgress)
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jelajah_student_progress', filter: `student_id=eq.${currentStudentDbId}` }, refreshStudentProgress)
                 .subscribe();
         }
 
@@ -3399,6 +3449,54 @@
             }
         }
 
+        function openProgressResetDialog(studentId) {
+            const student = appState.students.find(item => item.id === studentId);
+            if (!student) return;
+            selectedProgressResetStudentId = studentId;
+            document.getElementById('reset-progress-student-name').textContent = student.name;
+            document.getElementById('reset-progress-target').value = '';
+            document.getElementById('modal-reset-progress').classList.remove('hidden');
+        }
+
+        async function resetStudentProgress() {
+            const studentId = selectedProgressResetStudentId;
+            const student = appState.students.find(item => item.id === studentId);
+            const selectedTarget = document.getElementById('reset-progress-target').value;
+            if (!student || !selectedTarget) {
+                alert('Pilih perkalian tertentu atau seluruh kemajuan terlebih dahulu.');
+                return;
+            }
+            const allCheckpoints = selectedTarget === 'ALL';
+            const targetTable = allCheckpoints ? null : Number(selectedTarget);
+            const label = allCheckpoints ? 'seluruh kemajuan perkalian ×2 sampai ×9' : `checkpoint perkalian ×${targetTable}`;
+            if (!confirm(`Atur ulang ${label} milik ${student.name}? Riwayat setoran tetap tersimpan. Siswa perlu mengulang Ujian Akhir agar bendera finish kembali lulus.`)) return;
+
+            try {
+                if (supabaseReady) {
+                    const { error } = await supabaseClient.rpc('jelajah_reset_student_progress', {
+                        p_student_id: studentId,
+                        p_multiplication_table: targetTable
+                    });
+                    if (error) throw error;
+                    await loadTeacherWorkspace();
+                } else {
+                    const targets = allCheckpoints ? [2,3,4,5,6,7,8,9] : [targetTable];
+                    targets.forEach(table => { student.checkpoints[table] = 'BELUM_SETOR'; });
+                    student.progressResetAt = new Date().toISOString();
+                    student.finalExamPassed = false;
+                    student.finalExamAttempted = false;
+                    saveState();
+                }
+                closeModal('modal-reset-progress');
+                renderTeacherDashboard();
+                switchTeacherTab('tab-students');
+                alert(`Kemajuan ${student.name} berhasil diatur ulang. Riwayat setoran tetap tersimpan.`);
+            } catch (error) {
+                console.error('Pengaturan ulang kemajuan gagal:', error);
+                alert(`Kemajuan siswa belum diatur ulang: ${error.message || error}`);
+            }
+        }
+
         function renderStudentTable() {
             const tbody = document.getElementById('student-table-body');
             if (!tbody) return;
@@ -3421,6 +3519,9 @@
                             </span>
                         </td>
                         <td class="p-3 text-right">
+                            <button onclick="openProgressResetDialog('${s.id}')" title="Atur ulang kemajuan" class="text-xs bg-amber-500/15 hover:bg-amber-500 text-amber-200 hover:text-gray-950 px-2.5 py-1 rounded-lg border border-amber-500/30 transition mr-1.5">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+                            </button>
                             <button onclick="deleteStudent('${s.id}')" class="text-xs bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white px-2.5 py-1 rounded-lg border border-rose-500/30 transition">
                                 <i class="fa-solid fa-trash mr-1"></i> Hapus
                             </button>
