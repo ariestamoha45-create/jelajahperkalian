@@ -385,7 +385,7 @@
                         <i class="fa-solid fa-gamepad"></i>
                     </div>
                     <h3 class="font-display text-2xl md:text-3xl font-bold text-white">Arena Game Latihan Perkalian</h3>
-                    <p class="text-sm text-gray-400">Pilih salah satu dari 4 game seru di bawah ini untuk mengasah kemampuanmu!</p>
+                    <p class="text-sm text-gray-400">Pilih salah satu dari 5 game seru di bawah ini untuk mengasah kemampuanmu!</p>
                 </div>
 
                 <!-- 4 Game Cards Grid -->
@@ -435,6 +435,18 @@
                             <h4 class="font-display font-bold text-white text-lg group-hover:text-emerald-300 transition">4. Ketik Cepat</h4>
                             <p class="text-xs text-gray-400 mt-1">Ketikkan angka jawaban perkalian dengan cepat menggunakan keypad!</p>
                             <span class="inline-block mt-3 text-xs font-bold text-emerald-400 group-hover:underline">Mainkan Sekarang &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Game 5: Ular Perkalian -->
+                    <div onclick="selectPracticeGame('snake')" class="bg-space-dark/80 border border-space-border hover:border-lime-400 p-5 rounded-2xl cursor-pointer transition transform hover:-translate-y-1 hover:shadow-xl group flex items-start space-x-4">
+                        <div class="w-14 h-14 rounded-2xl bg-lime-500/10 text-lime-300 group-hover:bg-lime-500 group-hover:text-gray-950 flex items-center justify-center text-2xl transition shrink-0">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-white text-lg group-hover:text-lime-300 transition">5. Ular Perkalian</h4>
+                            <p class="text-xs text-gray-400 mt-1">Gerakkan ular dengan tombol panah dan makan angka jawaban yang benar.</p>
+                            <span class="inline-block mt-3 text-xs font-bold text-lime-300 group-hover:underline">Mainkan Sekarang &rarr;</span>
                         </div>
                     </div>
                 </div>
@@ -610,6 +622,40 @@
                         <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Menu Game
                     </button>
                     <span class="text-xs text-emerald-400">Gunakan keypad layar atau keyboard!</span>
+                </div>
+            </div>
+
+            <!-- GAME 5: ULAR PERKALIAN -->
+            <div id="practice-snake-card" class="hidden bg-space-card border border-space-border rounded-3xl p-3 sm:p-4 shadow-2xl space-y-2 text-center max-w-2xl mx-auto">
+                <div class="flex flex-wrap justify-between items-center gap-2 border-b border-space-border pb-3 text-sm font-semibold">
+                    <span class="text-lime-300 font-bold"><i class="fa-solid fa-gamepad mr-1"></i> Ular Perkalian</span>
+                    <span id="snake-question-counter" class="text-cyan-300">Soal 0 / 10</span>
+                    <span id="snake-score-counter" class="text-emerald-300">⭐ 0</span>
+                    <span id="snake-lives-counter" class="text-rose-300">❤️❤️❤️</span>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-400">Arahkan ular ke jawaban yang benar. Hindari angka pengecoh, dinding, dan tubuh ular.</p>
+                    <div id="snake-question-text" class="font-display text-2xl sm:text-3xl font-bold text-white">3 × 4 = ?</div>
+                </div>
+                <div class="relative mx-auto w-full max-w-[540px] overflow-hidden rounded-xl border-2 border-lime-500/70 bg-[#06101a] shadow-[0_0_20px_rgba(132,204,22,0.16)]">
+                    <canvas id="snake-game-canvas" width="540" height="360" class="block w-full touch-none" aria-label="Papan permainan Ular Perkalian"></canvas>
+                    <div id="snake-game-overlay" class="hidden absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-950/90 p-4">
+                        <p id="snake-game-overlay-title" class="font-display text-3xl font-bold text-white">Ronde selesai!</p>
+                        <p id="snake-game-overlay-copy" class="text-sm text-slate-300">Skor latihan: 0 dari 10</p>
+                        <button type="button" onclick="startSnakeGame()" class="rounded-xl bg-lime-500 px-5 py-2.5 font-bold text-slate-950 hover:bg-lime-400">Main lagi</button>
+                    </div>
+                </div>
+                <p id="snake-feedback" class="min-h-6 text-sm font-bold text-lime-200" aria-live="polite">Gunakan tombol panah, WASD, atau tombol arah di bawah.</p>
+                <div class="mx-auto grid w-40 grid-cols-3 gap-2 sm:hidden" aria-label="Tombol arah ular">
+                    <span></span><button type="button" onclick="changeSnakeDirection('up')" class="rounded-xl border border-space-border bg-space-dark py-3 text-xl text-white active:bg-lime-500/40" aria-label="Atas">▲</button><span></span>
+                    <button type="button" onclick="changeSnakeDirection('left')" class="rounded-xl border border-space-border bg-space-dark py-3 text-xl text-white active:bg-lime-500/40" aria-label="Kiri">◀</button>
+                    <button type="button" onclick="changeSnakeDirection('down')" class="rounded-xl border border-space-border bg-space-dark py-3 text-xl text-white active:bg-lime-500/40" aria-label="Bawah">▼</button>
+                    <button type="button" onclick="changeSnakeDirection('right')" class="rounded-xl border border-space-border bg-space-dark py-3 text-xl text-white active:bg-lime-500/40" aria-label="Kanan">▶</button>
+                </div>
+                <div class="flex flex-wrap justify-between gap-3 border-t border-space-border pt-3">
+                    <button onclick="backToPracticeSubmenu()" class="text-xs text-gray-400 hover:text-rose-400"><i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Menu Game</button>
+                    <button onclick="toggleSnakePause()" id="snake-pause-button" class="rounded-lg border border-space-border px-3 py-1.5 text-xs font-bold text-cyan-200 hover:bg-space-dark">Jeda</button>
+                    <span class="text-xs text-gray-500">Latihan ini tidak mengubah checkpoint.</span>
                 </div>
             </div>
 
@@ -1435,6 +1481,7 @@
 
         // VIEW ROUTING
         function switchView(viewId) {
+            if (viewId !== 'practice-mode' && practiceState.selectedGame === 'snake') stopSnakeGame();
             document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
             const target = document.getElementById(`view-${viewId}`);
             if (target) { target.classList.remove('hidden'); }
@@ -2025,7 +2072,7 @@
         // PRACTICE MODE & 4 SUBMENU GAMES LOGIC
         // =================================================================
         let practiceState = {
-            selectedGame: 'quiz', // 'quiz', 'memory', 'truefalse', 'typing'
+            selectedGame: 'quiz', // 'quiz', 'memory', 'truefalse', 'typing', 'snake'
             selectedTables: [2, 3],
             score: 0,
             questionLimit: 20,
@@ -2044,10 +2091,21 @@
             matchedCount: 0,
 
             // True or False State
-            currentTFStatement: null
+            currentTFStatement: null,
+
+            // Snake Game State
+            snakeTimer: null,
+            snakePaused: false,
+            snakeBody: [],
+            snakeDirection: 'right',
+            snakeNextDirection: 'right',
+            snakeFoods: [],
+            snakeLives: 3,
+            snakeCorrect: 0
         };
 
         function openPracticeSubmenu() {
+            stopSnakeGame();
             switchView('practice-mode');
             document.getElementById('practice-submenu-card').classList.remove('hidden');
             document.getElementById('practice-setup-card').classList.add('hidden');
@@ -2055,7 +2113,9 @@
             document.getElementById('practice-truefalse-card').classList.add('hidden');
             document.getElementById('practice-memory-card').classList.add('hidden');
             document.getElementById('practice-typing-card').classList.add('hidden');
+            document.getElementById('practice-snake-card').classList.add('hidden');
             window.removeEventListener('keydown', handleKeyboardTyping);
+            window.removeEventListener('keydown', handleSnakeKeyDown);
         }
 
         function backToPracticeSubmenu() {
@@ -2071,7 +2131,8 @@
                 quiz: 'Game 1: Pilihan Ganda',
                 memory: 'Game 2: Kartu Pasangan',
                 truefalse: 'Game 3: Benar atau Salah',
-                typing: 'Game 4: Ketik Cepat'
+                typing: 'Game 4: Ketik Cepat',
+                snake: 'Game 5: Ular Perkalian'
             };
             document.getElementById('game-setup-title').innerText = titles[gameType];
 
@@ -2104,6 +2165,7 @@
             practiceState.currentQuestionCounted = false;
             practiceState.questionResponded = false;
             practiceState.usedQuestions.clear(); // Reset used questions pool for fresh unique questions
+            practiceState.questionLimit = practiceState.selectedGame === 'snake' ? 10 : 20;
 
             document.getElementById('practice-setup-card').classList.add('hidden');
 
@@ -2115,6 +2177,8 @@
                 startTrueFalseGame();
             } else if (practiceState.selectedGame === 'typing') {
                 startTypingGame();
+            } else if (practiceState.selectedGame === 'snake') {
+                startSnakeGame();
             }
         }
 
@@ -2550,6 +2614,253 @@
                     input.classList.remove('border-rose-500', 'text-rose-400');
                     clearTypingInput();
                 }, 500);
+            }
+        }
+
+        // --- GAME 5: ULAR PERKALIAN (NOKIA-STYLE GRID SNAKE) ---
+        const snakeBoard = { columns: 18, rows: 12, cell: 30 };
+
+        function startSnakeGame() {
+            stopSnakeGame();
+            practiceState.selectedGame = 'snake';
+            practiceState.questionLimit = 10;
+            practiceState.score = 0;
+            practiceState.snakeCorrect = 0;
+            practiceState.snakeLives = 3;
+            practiceState.snakePaused = false;
+            practiceState.finished = false;
+            practiceState.usedQuestions.clear();
+            practiceState.lastQuestionKey = null;
+            practiceState.snakeBody = [
+                { x: 9, y: 6 }, { x: 8, y: 6 }, { x: 7, y: 6 }
+            ];
+            practiceState.snakeDirection = 'right';
+            practiceState.snakeNextDirection = 'right';
+            document.getElementById('practice-snake-card').classList.remove('hidden');
+            document.getElementById('snake-game-overlay').classList.add('hidden');
+            document.getElementById('snake-pause-button').textContent = 'Jeda';
+            document.getElementById('snake-feedback').textContent = 'Arahkan ular untuk memakan angka yang menjawab soal.';
+            nextSnakeQuestion();
+            window.removeEventListener('keydown', handleSnakeKeyDown);
+            window.addEventListener('keydown', handleSnakeKeyDown);
+            drawSnakeGame();
+            practiceState.snakeTimer = setInterval(stepSnakeGame, 220);
+        }
+
+        function stopSnakeGame() {
+            if (practiceState.snakeTimer) clearInterval(practiceState.snakeTimer);
+            practiceState.snakeTimer = null;
+            window.removeEventListener('keydown', handleSnakeKeyDown);
+        }
+
+        function handleSnakeKeyDown(event) {
+            const card = document.getElementById('practice-snake-card');
+            if (!card || card.classList.contains('hidden') || practiceState.finished) return;
+            const keyDirections = {
+                ArrowUp: 'up', w: 'up', W: 'up',
+                ArrowDown: 'down', s: 'down', S: 'down',
+                ArrowLeft: 'left', a: 'left', A: 'left',
+                ArrowRight: 'right', d: 'right', D: 'right'
+            };
+            if (keyDirections[event.key]) {
+                event.preventDefault();
+                changeSnakeDirection(keyDirections[event.key]);
+            } else if (event.key === ' ' || event.key.toLowerCase() === 'p') {
+                event.preventDefault();
+                toggleSnakePause();
+            }
+        }
+
+        function changeSnakeDirection(direction) {
+            const current = practiceState.snakeDirection;
+            const opposites = { up: 'down', down: 'up', left: 'right', right: 'left' };
+            if (direction !== opposites[current]) practiceState.snakeNextDirection = direction;
+        }
+
+        function toggleSnakePause() {
+            if (practiceState.finished) return;
+            practiceState.snakePaused = !practiceState.snakePaused;
+            document.getElementById('snake-pause-button').textContent = practiceState.snakePaused ? 'Lanjutkan' : 'Jeda';
+            document.getElementById('snake-feedback').textContent = practiceState.snakePaused
+                ? 'Permainan dijeda. Tekan Lanjutkan untuk bermain lagi.'
+                : 'Arahkan ular untuk memakan angka yang menjawab soal.';
+            drawSnakeGame();
+        }
+
+        function nextSnakeQuestion() {
+            practiceState.currentQuestion = generateUniqueMathQuestion(practiceState.selectedTables);
+            const q = practiceState.currentQuestion;
+            document.getElementById('snake-question-text').textContent = `${q.num1} × ${q.num2} = ?`;
+            const options = new Set([q.answer]);
+            let offset = 1;
+            while (options.size < 3) {
+                const candidate = q.answer + (offset % 2 ? offset : -offset);
+                if (candidate > 0) options.add(candidate);
+                offset++;
+            }
+            const values = Array.from(options).sort(() => Math.random() - 0.5);
+            practiceState.snakeFoods = values.map(value => ({
+                x: 0, y: 0, value, correct: value === q.answer
+            }));
+            repositionSnakeFoods();
+            updateSnakeCounters();
+        }
+
+        function repositionSnakeFoods() {
+            const placed = [];
+            const occupied = practiceState.snakeBody || [];
+            practiceState.snakeFoods.forEach(food => {
+                let candidate;
+                let attempts = 0;
+                do {
+                    candidate = {
+                        x: 1 + Math.floor(Math.random() * (snakeBoard.columns - 4)),
+                        y: 1 + Math.floor(Math.random() * (snakeBoard.rows - 4))
+                    };
+                    attempts++;
+                } while (attempts < 300 && (
+                    occupied.some(part => part.x >= candidate.x - 1 && part.x <= candidate.x + 2 && part.y >= candidate.y - 1 && part.y <= candidate.y + 2) ||
+                    placed.some(other => Math.abs(other.x - candidate.x) < 4 && Math.abs(other.y - candidate.y) < 4)
+                ));
+                food.x = candidate.x;
+                food.y = candidate.y;
+                placed.push(candidate);
+            });
+        }
+
+        function updateSnakeCounters() {
+            document.getElementById('snake-question-counter').textContent = `Benar ${practiceState.snakeCorrect} / 10`;
+            document.getElementById('snake-score-counter').textContent = `⭐ ${practiceState.score}`;
+            document.getElementById('snake-lives-counter').textContent = '❤️'.repeat(Math.max(0, practiceState.snakeLives)) + '🖤'.repeat(3 - Math.max(0, practiceState.snakeLives));
+        }
+
+        function stepSnakeGame() {
+            if (practiceState.finished || practiceState.snakePaused) return;
+            const delta = {
+                up: { x: 0, y: -1 }, down: { x: 0, y: 1 },
+                left: { x: -1, y: 0 }, right: { x: 1, y: 0 }
+            }[practiceState.snakeNextDirection];
+            practiceState.snakeDirection = practiceState.snakeNextDirection;
+            const head = practiceState.snakeBody[0];
+            const nextHead = { x: head.x + delta.x, y: head.y + delta.y };
+            const food = practiceState.snakeFoods.find(item =>
+                nextHead.x >= item.x && nextHead.x < item.x + 2 && nextHead.y >= item.y && nextHead.y < item.y + 2
+            );
+            const grows = Boolean(food?.correct);
+            const bodyToCheck = grows ? practiceState.snakeBody : practiceState.snakeBody.slice(0, -1);
+            const hitWall = nextHead.x < 0 || nextHead.y < 0 || nextHead.x >= snakeBoard.columns || nextHead.y >= snakeBoard.rows;
+            const hitSelf = bodyToCheck.some(part => part.x === nextHead.x && part.y === nextHead.y);
+            if (hitWall || hitSelf) {
+                loseSnakeLife(hitWall ? 'Ular menabrak dinding.' : 'Ular menabrak tubuhnya sendiri.');
+                return;
+            }
+
+            practiceState.snakeBody.unshift(nextHead);
+            if (food?.correct) {
+                recordPracticeQuestion(practiceState.currentQuestion, true);
+                playSound('correct');
+                practiceState.snakeCorrect++;
+                practiceState.score += 10;
+                updateSnakeCounters();
+                if (practiceState.snakeCorrect >= 10) {
+                    finishSnakeGame(true);
+                    return;
+                }
+                practiceState.snakeFeedbackTimeout && clearTimeout(practiceState.snakeFeedbackTimeout);
+                document.getElementById('snake-feedback').textContent = 'Tepat! Ular bertambah panjang. Soal berikutnya!';
+                nextSnakeQuestion();
+            } else {
+                practiceState.snakeBody.pop();
+                if (food) {
+                    recordPracticeQuestion(practiceState.currentQuestion, false);
+                    loseSnakeLife('Itu angka pengecoh! Cari hasil yang tepat.');
+                    return;
+                }
+            }
+            drawSnakeGame();
+        }
+
+        function loseSnakeLife(message) {
+            practiceState.snakeLives--;
+            playSound('wrong');
+            updateSnakeCounters();
+            if (practiceState.snakeLives <= 0) {
+                finishSnakeGame(false, message);
+                return;
+            }
+            practiceState.snakeBody = [{ x: 10, y: 7 }, { x: 9, y: 7 }, { x: 8, y: 7 }];
+            practiceState.snakeDirection = 'right';
+            practiceState.snakeNextDirection = 'right';
+            repositionSnakeFoods();
+            document.getElementById('snake-feedback').textContent = `${message} Sisa nyawa ${practiceState.snakeLives}.`;
+            drawSnakeGame();
+        }
+
+        function finishSnakeGame(completed, message = '') {
+            practiceState.finished = true;
+            stopSnakeGame();
+            const overlay = document.getElementById('snake-game-overlay');
+            document.getElementById('snake-game-overlay-title').textContent = completed ? 'Hebat! Misi selesai!' : 'Permainan selesai';
+            document.getElementById('snake-game-overlay-copy').textContent = `${message ? `${message} ` : ''}Jawaban benar: ${practiceState.snakeCorrect} dari 10 · Skor: ${practiceState.score}`;
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            document.getElementById('snake-feedback').textContent = completed ? 'Kamu berhasil menjawab 10 soal dengan ular!' : 'Tekan Main lagi untuk mencoba kembali.';
+        }
+
+        function drawSnakeGame() {
+            const canvas = document.getElementById('snake-game-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const size = snakeBoard.cell;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#07111d';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'rgba(71, 105, 122, 0.24)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x <= snakeBoard.columns; x++) {
+                ctx.beginPath(); ctx.moveTo(x * size + 0.5, 0); ctx.lineTo(x * size + 0.5, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y <= snakeBoard.rows; y++) {
+                ctx.beginPath(); ctx.moveTo(0, y * size + 0.5); ctx.lineTo(canvas.width, y * size + 0.5); ctx.stroke();
+            }
+
+            practiceState.snakeFoods.forEach(food => {
+                const box = size - 12;
+                const x = food.x * size + (size - box) / 2, y = food.y * size + (size - box) / 2;
+                // Semua pilihan makanan tampak sama agar warna tidak membocorkan jawaban.
+                ctx.fillStyle = '#7f1d1d';
+                ctx.fillRect(x, y, box, box);
+                ctx.strokeStyle = '#fb7185';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x + 1, y + 1, box - 2, box - 2);
+                ctx.fillStyle = '#fda4af';
+                ctx.beginPath(); ctx.arc(x + box / 2, y + 9, 4, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(String(food.value), x + box / 2, y + box / 2 + 6);
+            });
+
+            practiceState.snakeBody.forEach((part, index) => {
+                const segmentSize = 21;
+                const pad = (size - segmentSize) / 2;
+                ctx.fillStyle = index === 0 ? '#d9f99d' : (index % 2 ? '#84cc16' : '#65a30d');
+                ctx.fillRect(part.x * size + pad, part.y * size + pad, segmentSize, segmentSize);
+                if (index === 0) {
+                    const eyes = practiceState.snakeDirection === 'left' || practiceState.snakeDirection === 'right'
+                        ? [{ x: 0.65, y: 0.32 }, { x: 0.65, y: 0.68 }]
+                        : [{ x: 0.32, y: 0.35 }, { x: 0.68, y: 0.35 }];
+                    ctx.fillStyle = '#14210b';
+                    eyes.forEach(eye => {
+                        ctx.beginPath(); ctx.arc((part.x + eye.x) * size, (part.y + eye.y) * size, 2.5, 0, Math.PI * 2); ctx.fill();
+                    });
+                }
+            });
+
+            if (practiceState.snakePaused && !practiceState.finished) {
+                ctx.fillStyle = 'rgba(2, 6, 23, 0.72)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 30px "Plus Jakarta Sans", sans-serif';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('DIJEDA', canvas.width / 2, canvas.height / 2);
             }
         }
 
